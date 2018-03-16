@@ -5,6 +5,7 @@ Created on Mar 15, 2018
 '''
 from idlelib.browser import file_open
 from fileinput import filelineno
+from Lib import tokenize
 
 class MyClass(object):
     '''
@@ -36,17 +37,21 @@ class MyClass(object):
     
     def __parseLine__(file_line):
         
-        if(hasNumber(file_line[0])
-        
-        time_stamp = parseTimeStamp(file_line)
-        event = parseEvent(file_line)
-        workerID = parseWorkerID(file_line)
-        microtaskID = parseMicrotaskID(file_line)
-        question = parseQuestion(file_line)
-        answer = parseQuestion(file_line)
-        duration = parseDuration(file_line)
-        explanation = parseExplanation(file_line)
-        
+        if(hasNumber(file_line[0]):
+            tokens = re.sprint(';',file_line)
+            time_stamp_event = tokens[0]
+            time_stamp = time_stamp_event[:12]
+            event = re.split('\s-\s\=',time_stamp_event)
+            event = event[2]
+            workerID = tokens[2]
+            microtaskID = tokens[3]
+            question = tokens[4]
+            answer = tokens[5]
+            duration = tokens[6]
+            explanation = tokens[7]
+            dictionaryLine = {}
+        else:
+                
         
         
     def hasNumbers(inputString):

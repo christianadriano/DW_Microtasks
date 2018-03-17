@@ -62,14 +62,13 @@ class SessionLoader:
         dictionaryLine = {}
                 
     def consolidate_broken_explanations(self,file_lines):
-        """Some explanation text was broken into multiple lines.
-        This function cut these lines and paste the content back in the explanations field."""
+        """This function cut these lines and paste the content back in the explanations field. Some explanation text was broken into multiple lines."""
         i=-1
         previousIndex=-1
-        processed_lines={}
+        processed_lines=1
         for line in file_lines: 
             i=i+1
-            if(not hasNumber(file_line[0])):
+            if(not hasNumbers(file_lines[0])):
                if (previousIndex!=-1):
                    previousIndex=i
                    processed_lines[previousIndex] = processed_lines[previousIndex]+line

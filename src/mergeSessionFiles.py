@@ -7,7 +7,7 @@ Processess SessionLog and ConsentLog Files
 
 @author: Chris
 '''
-from idlelib.browser import file_open
+#from idlelib.browser import file_open
 import re
 
 class SessionLoader:
@@ -18,8 +18,12 @@ class SessionLoader:
 
     def __init__(self):
         '''
-        Constructor
+        Empty constructor
         '''
+        
+     
+    def run(self):
+        """ coordinate the loading, Cleaning, Formating, and Writing of Session Files"""
         file_header = ['time_stamp','event','workerID','microtaskID','fileName','question','answer','duration','explanation']
         file_lines = [file_header]
         #Load file into a dictionary 
@@ -29,34 +33,31 @@ class SessionLoader:
         file_path = path2014 + file_name
         file_lines = self.load_file(file_path,file_lines)
         file_lines = self.consolidate_broken_explanations(file_lines)
-        
 
-    def load_file(self,file_path,file_lines=[]):
-        """read a file and writes the content in a list of dictionaries [{lineNuber:LineContent}]"""
+    def load_file(self,file_path):
+        """Read a file and writes the content in a list of dictionaries [{lineNuber:LineContent}]"""
+        file_lines=[]
         with open(file_path) as file_object:
             for line in file_object:
                 file_lines.append(line) 
-        #print(file_lines[0:4])
+                #print(file_lines)
         file_object.close()
         return file_lines
-
- 
                 
     def consolidate_broken_explanations(self,file_lines):
         """This function cut these lines and paste the content back in the explanations field. Some explanation text was broken into multiple lines."""
         i=-1
         previous_index=-1
-        processed_lines=1
+        processed_lines=[]
         for line in file_lines: 
-            i=i+1
-            doesItHaveNumbers =  self.hasNumbers(file_lines[0])
-            if(not doesItHaveNumbers):
+            i=i+1 
+            if(not self.hasNumbers(file_lines[0])):
                 if (previous_index!=-1):
                     previous_index=i
-                    processed_lines[previous_index] = processed_lines[previous_index]+line
+                    processed_lines[previous_index] = processed_lines[previous_index]+" "+line
                 else:
                     previous_index=-1 #stop accumulating extra explanation lines
-                    processed_lines = line
+                    processed_lines.append(line)
         return processed_lines
                     
                     

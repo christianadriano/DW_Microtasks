@@ -44,20 +44,20 @@ class SessionLoader:
         file_object.close()
         return file_lines
                 
-    def consolidate_broken_explanations(self,file_lines):
-        """This function cut these lines and paste the content back in the explanations field. Some explanation text was broken into multiple lines."""
-        i=-1
-        previous_index=-1
+    def consolidate_broken_lines(self,file_lines):
+        """This function cut these lines and paste the content back in the original line. Some lines were broken into multiple lines."""
+        i=0
+        accumulating_line=-1
         processed_lines=[]
-        for line in file_lines: 
-            i=i+1 
-            if(not self.hasNumbers(file_lines[0])):
-                if (previous_index!=-1):
-                    previous_index=i
-                    processed_lines[previous_index] = processed_lines[previous_index]+" "+line
-                else:
-                    previous_index=-1 #stop accumulating extra explanation lines
-                    processed_lines.append(line)
+        for line in file_lines:  
+            if(not self.hasNumbers(line[0])):
+                if(accumulating_line==-1):
+                    accumulating_line=i-1#set line to received broken lines
+                processed_lines[accumulating_line] = processed_lines[accumulating_line]+" "+line
+            else:
+                accumulating_line=-1 #stop accumulating extra explanation lines
+                processed_lines.append(line)
+                i=i+1
         return processed_lines
                     
                     

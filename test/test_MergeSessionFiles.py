@@ -8,7 +8,7 @@ from MergeSessionFiles import SessionLoader
 
 class Test(unittest.TestCase):
 
-    def test_load_file(self):
+    def ttest_load_file(self):
         self.sessionLoader = SessionLoader()
         file_path = "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt"
         file_lines = self.sessionLoader.load_file(file_path)
@@ -19,7 +19,7 @@ class Test(unittest.TestCase):
         self.sessionLoader = SessionLoader()
         file_path = "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt"
         file_set = self.sessionLoader.load_file(file_path)
-        file_set = self.sessionLoader.consolidate_broken_explanations(file_set[:])
+        file_set = self.sessionLoader.consolidate_broken_lines(file_set[:])
         print(file_set)
         self.assertEqual(3,file_set.__len__())
 

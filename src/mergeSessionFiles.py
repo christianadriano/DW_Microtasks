@@ -72,7 +72,7 @@ class SessionLoader:
         """tests if the inputString contains numbers"""
         return any(char.isdigit() for char in input_string)
    
-    def parse_to_dictionary(self,file_lines,suffix):
+    def parse_all_to_dictionary(self,file_lines,suffix):
         """parse all lines into dictionary tuples, return a list of these tuples"""
         parsed_lines=[]
         for line in file_lines:

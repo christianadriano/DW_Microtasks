@@ -87,9 +87,9 @@ class SessionLoader:
         event = re.split('\=',tokens[0])[1]
         worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
         session_ID = re.split('\=',tokens[2])[1]
-        tuple_line={"time_stamp":time_stamp,"event":event,"worker_ID":worker_ID,"session_ID":session_ID}
+        tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}
         if(event=="MICROTASK"):
-            tuple_line["microtask_ID"] = re.split('\=',tokens[3])[1]
+            tuple_line["microtask_id"] = re.split('\=',tokens[3])[1]
             tuple_line["file_name"] = re.split('\=',tokens[4])[1]
             tuple_line["question"] = re.split('\=',tokens[5])[1]
             tuple_line["answer"] = re.split('\=',tokens[6])[1]
@@ -97,8 +97,43 @@ class SessionLoader:
             tuple_line["explanation"] = re.split('\=',tokens[8])[1]          
         return (tuple_line)
         
-    def write_session_log_cvs(self,file_lines):
-         """ write the content to a csv file"""
+    def write_session_log_arff(self,tuple_lines):
+         """write the content to an arff file"""
+         header_lines = self.get_header_arff()
+         with open('FailuireUnderstanding_Crowd_1.arff', 'a') as the_file:
+            for line in header_lines:     
+                 the_file.write(line)
+                 the_file.write("\n")
+            for line in tuple_lines:
+                the_file.write(getLineFromDictionary(line))
+             
+        
+     
+    def get_header_arff(self):
+        author ="Christian Medeiros Adriano"
+        date="March, 2018"
+        header_lines=["% 1. Title: First Failure Understanding Database",
+                    "%" ,
+                    "% 2. Sources:",
+                    "%      (a) Creator: Christian Medeiros Adriano",
+                    "%      (b) Date: March, 2018",
+                    "%" ,
+                    "@RELATION Task",
+                    "",
+                    "@ATTRIBUTE time_stamp  DATE 'HH:mm:ss.SSS'",
+                    "@ATTRIBUTE event   {OPEN SESSION,MICROTASK,CLOSE SESSION}",
+                    "@ATTRIBUTE worker_id  NUMERIC",
+                    "@ATTRIBUTE session_id   STRING",
+                    "@ATTRIBUTE microtask_id NUMERIC",
+                    "@ATTRIBUTE file_name STRING",
+                    "@ATTRIBUTE question STRING",
+                    "@ATTRIBUTE answer {NO, PROBABLY_NOT, I_CANT_TELL, PROBABLY_YES, YES}",
+                    "@ATTRIBUTE duration NUMERIC",
+                    "@ATTRIBUTE explanation STRING",
+                    "",
+                    
+                    ]
+        return header_lines
          
 myObject = SessionLoader()
 myObject.__init__()

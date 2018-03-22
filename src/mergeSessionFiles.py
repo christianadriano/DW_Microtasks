@@ -106,9 +106,12 @@ class SessionLoader:
                  the_file.write("\n")
             for line in tuple_lines:
                 the_file.write(getLineFromDictionary(line))
-             
+                
         
-     
+    def comma_separated_dictionary_line(self):
+        
+        
+         
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
         date="March, 2018"

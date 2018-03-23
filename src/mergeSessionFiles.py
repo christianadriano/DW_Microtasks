@@ -107,7 +107,7 @@ class SessionLoader:
                 the_file.write(line)
                 the_file.write("\n")
             for line in tuple_lines:
-                the_file.write(self.convert_to_comma_separated(line.values()))
+                the_file.write(self.convert_to_comma_separated(line))
                 the_file.write("\n")
     
     def convert_to_comma_separated(self,tuple_dictionary):
@@ -140,7 +140,7 @@ class SessionLoader:
                     "@ATTRIBUTE duration NUMERIC",
                     "@ATTRIBUTE explanation STRING",
                     "",
-                    
+                    "@DATA"
                     ]
         return header_lines
          

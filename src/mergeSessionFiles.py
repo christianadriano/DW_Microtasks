@@ -20,6 +20,7 @@ class SessionLoader:
         '''
         Empty constructor
         '''
+        self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//'
         
     def process(self):
         """process the two files"""
@@ -34,12 +35,13 @@ class SessionLoader:
         file_lines = [file_header]
         #Load file into a dictionary 
         root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//'
-        path2014 = root + 'Experiment-1_2014//'
+        path2014 = self.root + 'Experiment-1_2014//'
         file_path = path2014 + file_name  # @UndefinedVariable
         file_lines = self.load_file(file_path,file_lines)
         file_lines = self.consolidate_broken_explanations(file_lines)
-        file_lines = self.parse_to_dictionary(file_lines, suffix)
+        tuple_lines = self.parse_to_dictionary(file_lines, suffix)
         #print file_lines to file
+        self.write_session_log_arff(tuple_lines, output_file='FailuireUnderstanding_Crowd_1.arff')
 
     def load_file(self,file_path):
         """Read a file and writes the content in a list of dictionaries [{lineNuber:LineContent}]"""
@@ -97,21 +99,25 @@ class SessionLoader:
             tuple_line["explanation"] = re.split('\=',tokens[8])[1]          
         return (tuple_line)
         
-    def write_session_log_arff(self,tuple_lines):
-         """write the content to an arff file"""
-         header_lines = self.get_header_arff()
-         with open('FailuireUnderstanding_Crowd_1.arff', 'a') as the_file:
+    def write_session_log_arff(self,tuple_lines,output_file):
+        """write the content to an arff file"""
+        header_lines = self.get_header_arff()
+        with open(self.root+output_file, 'a') as the_file:
             for line in header_lines:     
-                 the_file.write(line)
-                 the_file.write("\n")
+                the_file.write(line)
+                the_file.write("\n")
             for line in tuple_lines:
-                the_file.write(getLineFromDictionary(line))
-                
-        
-    def comma_separated_dictionary_line(self):
-        
-        
-         
+                the_file.write(self.convert_to_comma_separated(line.values()))
+                the_file.write("\n")
+    
+    def convert_to_comma_separated(self,tuple_dictionary):
+        list_values = list(tuple_dictionary.values())
+        str_accum=''
+        for item in list_values:
+            str_accum = str_accum + "," + item
+        str_accum = str_accum[1:str_accum.__len__()]
+        return str_accum
+    
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
         date="March, 2018"

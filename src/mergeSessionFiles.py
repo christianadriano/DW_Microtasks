@@ -140,7 +140,8 @@ class SessionLoader:
                     "@ATTRIBUTE duration NUMERIC",
                     "@ATTRIBUTE explanation STRING",
                     "",
-                    "@DATA"
+                    "@DATA",
+                    ""
                     ]
         return header_lines
          

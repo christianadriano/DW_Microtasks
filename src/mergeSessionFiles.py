@@ -9,6 +9,7 @@ Processes SessionLog and ConsentLog Files
 '''
 #from idlelib.browser import file_open
 import re
+from util.FileReaderWriter import FileReaderWriter  
 
 class SessionLoader:
     '''
@@ -21,27 +22,30 @@ class SessionLoader:
         Empty constructor
         '''
         self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//'
+        self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//test//' 
         
     def process(self):
         """process the two files"""
-        file_lines = self.run(filen_name="session_Run1-Total-25oct.log",suffix='1')
-        file_lines.append(self.run(file_name="session_Run2-28oct.log", suffix='2'))
-        return(file_lines)
+        file_name_1= self.root + "session_Run1-Total-25oct.log"
+        file_name_2= self.root + "session_Run2-28oct.log"
+        tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt",suffix='1') #file_name="session_Run1-Total-25oct.log",suffix='1')
+        tuple_lines = tuple_lines+ self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData_2.txt", suffix='2') #file_name="session_Run2-28oct.log", suffix='2')
+        
+        writer = FileReaderWriter()
+        writer.write_session_log_arff(tuple_lines, 
+                                   self.output+'FailuireUnderstanding_Crowd_1.arff',
+                                    self.get_header_arff())
 
-    def run(self,file_name,suffix):
+    def run(self,file_name_path,suffix):
         """ coordinate the loading, Cleaning, Formating, and Writing of Session Files"""
         """ file_name of the session log data, suffix is either 1 or 2, to indicate from which file this register came"""
-        file_header = ['time_stamp','event','workerID','microtaskID','fileName','question','answer','duration','explanation']
-        file_lines = [file_header]
+        file_lines = ['time_stamp','event','workerID','microtaskID','fileName','question','answer','duration','explanation']
         #Load file into a dictionary 
-        root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//'
-        path2014 = self.root + 'Experiment-1_2014//'
-        file_path = path2014 + file_name  # @UndefinedVariable
-        file_lines = self.load_file(file_path,file_lines)
-        file_lines = self.consolidate_broken_explanations(file_lines)
-        tuple_lines = self.parse_to_dictionary(file_lines, suffix)
+        file_lines = self.load_file(file_name_path)
+        file_lines = self.consolidate_broken_lines(file_lines)
+        tuple_lines = self.parse_all_to_dictionary(file_lines, suffix)
         #print file_lines to file
-        self.write_session_log_arff(tuple_lines, output_file='FailuireUnderstanding_Crowd_1.arff')
+        return (tuple_lines)
 
     def load_file(self,file_path):
         """Read a file and writes the content in a list of dictionaries [{lineNuber:LineContent}]"""
@@ -99,24 +103,6 @@ class SessionLoader:
             tuple_line["explanation"] = re.split('\=',tokens[8])[1]          
         return (tuple_line)
         
-    def write_session_log_arff(self,tuple_lines,output_file):
-        """write the content to an arff file"""
-        header_lines = self.get_header_arff()
-        with open(self.root+output_file, 'a') as the_file:
-            for line in header_lines:     
-                the_file.write(line)
-                the_file.write("\n")
-            for line in tuple_lines:
-                the_file.write(self.convert_to_comma_separated(line))
-                the_file.write("\n")
-    
-    def convert_to_comma_separated(self,tuple_dictionary):
-        list_values = list(tuple_dictionary.values())
-        str_accum=''
-        for item in list_values:
-            str_accum = str_accum + "," + item
-        str_accum = str_accum[1:str_accum.__len__()]
-        return str_accum
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
@@ -147,3 +133,4 @@ class SessionLoader:
          
 myObject = SessionLoader()
 myObject.__init__()
+myObject.process()

@@ -4,19 +4,19 @@ Created on Mar 25, 2018
 @author: Chris
 '''
 
-class FileReaderWrite(object):
+class FileReaderWriter(object):
     '''
     utility functions to reads and write to a file
     '''
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
-    def write_session_log_arff(self,tuple_lines,output_file_path,header_line):
+    def write_session_log_arff(self,tuple_lines,output_file_path,header_lines):
         """write the content to an arff file"""
-        with open(self.root+output_file_path, 'a') as the_file:
+        with open(output_file_path, 'a') as the_file:
             for line in header_lines:     
                 the_file.write(line)
                 the_file.write("\n")

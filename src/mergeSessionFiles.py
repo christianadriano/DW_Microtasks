@@ -66,10 +66,10 @@ class SessionLoader:
             if(not self.hasNumbers(line[0])):
                 if(accumulating_line==-1):
                     accumulating_line=i-1#set line to received broken lines
-                processed_lines[accumulating_line] = processed_lines[accumulating_line]+" "+line
+                processed_lines[accumulating_line] = processed_lines[accumulating_line]+" "+line.strip("\n")
             else:
                 accumulating_line=-1 #stop accumulating extra explanation lines
-                processed_lines.append(line)
+                processed_lines.append(line.strip("\n"))
                 i=i+1
         return processed_lines
                     

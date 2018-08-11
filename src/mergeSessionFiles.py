@@ -3,9 +3,9 @@ Created on Mar 15, 2018
 
 Processes SessionLog and ConsentLog Files
 - Remove extra-lines
-- Add information of user
+- Add programmer data obtain through the qualification test and demographics survey
 
-@author: Chris
+@author: Christian Adriano
 '''
 #from idlelib.browser import file_open
 import re
@@ -75,8 +75,17 @@ class SessionLoader:
                     
                     
     def hasNumbers(self,input_string):
-        """tests if the inputString contains numbers"""
+        """tests if the inputString contains numbers, because it should start with numbers"""
         return any(char.isdigit() for char in input_string)
+   
+    def match_start_tuple(self,first_eight_characters):
+        """tests if the string corresponds to the beginning of new tuple NN:NN:NN"""
+        isNewTuple = False
+        if(re.match(r'[0-9][0-9]:[0-9][0-9]:[0-9][0-9]',first_eight_characters)):
+            isNewTuple = True
+        else:
+            isNewTuple = False
+        return isNewTuple
    
     def parse_all_to_dictionary(self,file_lines,suffix):
         """parse all lines into dictionary tuples, return a list of these tuples"""

@@ -1,15 +1,13 @@
 '''
 Created on Mar 25, 2018
 
-@author: Chris
+@author: Christian Adriano
 '''
 
 class FileReaderWriter(object):
     '''
-    utility functions to reads and write to a file
+    utility functions to reads and writes to an ARFF file
     '''
-
-
     def __init__(self):
         '''
         Constructor

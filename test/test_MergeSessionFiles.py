@@ -16,7 +16,7 @@ class Test(unittest.TestCase):
         print("eeeeee")
         self.assertEqual(4,file_lines.__len__())
 
-    def disabled_test_consolidate_lines(self):
+    def test_consolidate_lines(self):
         self.sessionLoader = SessionLoader()
         file_path = "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt"
         file_set = self.sessionLoader.load_file(file_path)
@@ -49,7 +49,7 @@ class Test(unittest.TestCase):
         self.assertEqual(10,file_lines_tuples[1].__len__())  
         self.assertEqual(4,file_lines_tuples[2].__len__()) 
  
-    def test_match_start_tuple(self):
+    def disabled_test_match_start_tuple(self):
         self.sessionLoader = SessionLoader()
         match_result = self.sessionLoader.match_start_tuple("01:04:01")
         self.assertTrue(match_result, "matching start did not work!")

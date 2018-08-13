@@ -91,9 +91,9 @@ class SessionLoader:
         for line in consent_file_lines:
             parsed_line = self.parse_consent_line_to_dictionary(line,suffix) 
             key = parsed_line["worker_id"]
-            print()
-            print(parsed_line)
-            print(key)
+#             print()
+#             print(parsed_line)
+#             print(key)
             if(key in consent_dictionnary):
                 existing_dictionary = consent_dictionnary[key]  
                 existing_dictionary.update(parsed_line)
@@ -143,7 +143,10 @@ class SessionLoader:
         parsed_lines=[]
         for line in file_lines:
             newLine = self.parse_line_to_dictionary(line, suffix)
-            """newLine = add_worker_data(newLine["worker_id"],newLine,suffix)"""
+            worker_id = newLine["worker_id"]
+            if(worker_id in worker_data):
+                worker_data_dictionary = worker_data[worker_id]
+                newLine.update(worker_data_dictionary)
             parsed_lines.append(newLine)
         return parsed_lines
     

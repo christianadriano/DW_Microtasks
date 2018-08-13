@@ -16,7 +16,6 @@ class SessionLoader:
     classdocs
     '''
 
-
     def __init__(self):
         '''
         Empty constructor
@@ -62,8 +61,8 @@ class SessionLoader:
         i=0
         accumulating_line=-1
         processed_lines=[]
-        for line in file_lines:  
-            if(not self.hasNumbers(line[0])):
+        for line in file_lines: 
+            if(not self.match_start_tuple(line)):
                 if(accumulating_line==-1):
                     accumulating_line=i-1#set line to received broken lines
                 processed_lines[accumulating_line] = processed_lines[accumulating_line]+" "+line.strip("\n")
@@ -73,11 +72,6 @@ class SessionLoader:
                 i=i+1
         return processed_lines
                     
-                    
-    def hasNumbers(self,input_string):
-        """tests if the inputString contains numbers, because it should start with numbers"""
-        return any(char.isdigit() for char in input_string)
-   
     def match_start_tuple(self,first_eight_characters):
         """tests if the string corresponds to the beginning of new tuple NN:NN:NN"""
         isNewTuple = False
@@ -109,9 +103,17 @@ class SessionLoader:
             tuple_line["question"] = re.split('\=',tokens[5])[1]
             tuple_line["answer"] = re.split('\=',tokens[6])[1]
             tuple_line["duration"] =  re.split('\=',tokens[7])[1]
-            tuple_line["explanation"] = re.split('\=',tokens[8])[1]          
+            tuple_line["explanation"] = self.replace_commas(self.retrieve_explanation(line))          
         return (tuple_line)
         
+    def retrieve_explanation(self, line):
+        """restore the explanation text, which can include semicolon and equal"""
+        position = line.index("explanation=")
+        return(line[position+"explanation=".__len__():line.__len__()])
+    
+    def replace_commas(self, explanation_text):
+        """replace commas with semicolons, because the output file is in CSV format"""
+        return(explanation_text.replace(",",";"))
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
@@ -139,6 +141,12 @@ class SessionLoader:
                     ""
                     ]
         return header_lines
+    
+    """Not used"""
+    def hasNumbers(self,input_string):
+        """tests if the inputString contains numbers, because it should start with numbers"""
+        return any(char.isdigit() for char in input_string)
+         
          
 myObject = SessionLoader()
 myObject.__init__()

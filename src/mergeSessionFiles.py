@@ -95,6 +95,7 @@ class SessionLoader:
 #             print(parsed_line)
 #             print(key)
             if(key in consent_dictionnary):
+                del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 existing_dictionary = consent_dictionnary[key]  
                 existing_dictionary.update(parsed_line)
                 consent_dictionnary[key] = existing_dictionary
@@ -105,11 +106,11 @@ class SessionLoader:
     def parse_consent_line_to_dictionary(self,line,suffix):
         """parse the line into a dictionary"""
         tokens = re.split(';',line)    
-        time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12]
+        #time_stamp_event = tokens[0]
+        #time_stamp = time_stamp_event[:12]
         event = (re.split('\=',tokens[0])[1]).strip()
         worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
-        tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID}
+        tuple_line={"worker_id":worker_ID} #no need "time_stamp":time_stamp,"event":event
         if(event=="CONSENT"):
             tuple_line["consent_date"] = re.split('\=',tokens[2])[1] 
         elif(event=="SKILLTEST"):
@@ -120,7 +121,7 @@ class SessionLoader:
             tuple_line["grade"] =  re.split('\=',tokens[6])[1]
             tuple_line["testDuration"] = re.split('\=',tokens[7])[1]
         elif(event=="SURVEY"):
-            tuple_line["session_id"] = re.split('\=',tokens[2])[1]
+            tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
             tuple_line["feedback"] = self.replace_commas(re.split('\=',tokens[3])[1])    
             tuple_line["gender"] = re.split('\=',tokens[4])[1]
             tuple_line["years_programming"] = re.split('\=',tokens[5])[1]
@@ -184,12 +185,12 @@ class SessionLoader:
                     "%" ,
                     "% 2. Sources:",
                     "%      (a) Creator: Christian Medeiros Adriano",
-                    "%      (b) Date: March, 2018",
+                    "%      (b) Date: August, 2018",
                     "%" ,
                     "@RELATION Task",
                     "",
                     "@ATTRIBUTE time_stamp  DATE 'HH:mm:ss.SSS'",
-                    "@ATTRIBUTE event   {OPEN SESSION,MICROTASK,CLOSE SESSION}",
+                    "@ATTRIBUTE event   {MICROTASK}",
                     "@ATTRIBUTE worker_id  NUMERIC",
                     "@ATTRIBUTE session_id   STRING",
                     "@ATTRIBUTE microtask_id NUMERIC",
@@ -197,6 +198,11 @@ class SessionLoader:
                     "@ATTRIBUTE question STRING",
                     "@ATTRIBUTE answer {NO, PROBABLY_NOT, I_CANT_TELL, PROBABLY_YES, YES}",
                     "@ATTRIBUTE duration NUMERIC",
+                    "@ATTRIBUTE explanation STRING",
+                    "@ATTRIBUTE explanation STRING",
+                    "@ATTRIBUTE explanation STRING",
+                    "@ATTRIBUTE explanation STRING",
+                    "@ATTRIBUTE explanation STRING",
                     "@ATTRIBUTE explanation STRING",
                     "",
                     "@DATA",

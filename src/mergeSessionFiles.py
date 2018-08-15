@@ -26,17 +26,25 @@ class SessionLoader:
         
     def process(self):
         """process the two files"""
-        file_name_1= self.root + "session_Run1-Total-25oct.log"
-        file_name_2= self.root + "session_Run2-28oct.log"
-        tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt",
-                               "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData.txt",
-                               suffix='1') #file_name="session_Run1-Total-25oct.log",suffix='1')
+        file_session_1= self.root + "session_Run1-Total-25oct.log"
+        file_session_2= self.root + "session_Run2-28oct.log"
+        file_consent_1= self.root + "consent_Run1-Total-25oct.log"
+        file_consent_2= self.root + "consent_Run2-28oct.log"
+        
+        tuple_lines = self.run(file_session_1,
+                               file_consent_1,
+                               suffix='1') 
+        
+#        Test files
+#         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt",
+#                                "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData.txt",
+#                                suffix='1') #file_name="session_Run1-Total-25oct.log",suffix='1')
         
         """tuple_lines = tuple_lines + self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData_2.txt", suffix='2') #file_name="session_Run2-28oct.log", suffix='2')
         """
         writer = FileReaderWriter()
         writer.write_session_log_arff(tuple_lines, 
-                                   self.output+'FailuireUnderstanding_Crowd_1.arff',
+                                   self.output+'consolidated_Run1-Total-25oct.arff',
                                     self.get_header_arff())
 
     def run(self,session_file_name_path,consent_file_name_path, suffix):
@@ -91,16 +99,22 @@ class SessionLoader:
         for line in consent_file_lines:
             parsed_line = self.parse_consent_line_to_dictionary(line,suffix) 
             key = parsed_line["worker_id"]
+#             event = parsed_line["event"]
 #             print()
 #             print(parsed_line)
 #             print(key)
             if(key in consent_dictionnary):
                 del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 existing_dictionary = consent_dictionnary[key]  
+#                 if(event=="CONSENT"):
+#                     parsed_line.update(existing_dictionary)
+#                     consent_dictionnary[key] = parsed_line
+#                 elif(event =="SKILLTEST" or event=="SURVEY"):
                 existing_dictionary.update(parsed_line)
                 consent_dictionnary[key] = existing_dictionary
             else:
                 consent_dictionnary[key] = parsed_line
+            
         return(consent_dictionnary)
            
     def parse_consent_line_to_dictionary(self,line,suffix):
@@ -110,18 +124,19 @@ class SessionLoader:
         #time_stamp = time_stamp_event[:12]
         event = (re.split('\=',tokens[0])[1]).strip()
         worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
-        tuple_line={"worker_id":worker_ID} #no need "time_stamp":time_stamp,"event":event
+        tuple_line={"worker_id":worker_ID} #need this to find index the tuple
+#         tuple_line={"event":event} #Need this later to make a decision about the order of the fields
         if(event=="CONSENT"):
-            tuple_line["consent_date"] = re.split('\=',tokens[2])[1] 
+            tuple_line["consent_date"] = (re.split('\=',tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
             tuple_line["test1"] = re.split('\=',tokens[2])[1]
             tuple_line["test2"] = re.split('\=',tokens[3])[1]
             tuple_line["test3"] = re.split('\=',tokens[4])[1]
             tuple_line["test4"] = re.split('\=',tokens[5])[1]
             tuple_line["grade"] =  re.split('\=',tokens[6])[1]
-            tuple_line["testDuration"] = re.split('\=',tokens[7])[1]
+            tuple_line["testDuration"] = (re.split('\=',tokens[7])[1]).strip()
         elif(event=="SURVEY"):
-            tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
+            ## tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
             tuple_line["feedback"] = self.replace_commas(re.split('\=',tokens[3])[1])    
             tuple_line["gender"] = re.split('\=',tokens[4])[1]
             tuple_line["years_programming"] = re.split('\=',tokens[5])[1]
@@ -182,7 +197,7 @@ class SessionLoader:
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
-        date="March, 2018"
+        date="August, 2018"
         header_lines=["% 1. Title: First Failure Understanding Database",
                     "%" ,
                     "% 2. Sources:",
@@ -192,7 +207,6 @@ class SessionLoader:
                     "@RELATION Task",
                     "",
                     "@ATTRIBUTE time_stamp  DATE 'HH:mm:ss.SSS'",
-                    "@ATTRIBUTE event   {MICROTASK}",
                     "@ATTRIBUTE worker_id  NUMERIC",
                     "@ATTRIBUTE session_id   STRING",
                     "@ATTRIBUTE microtask_id NUMERIC",
@@ -201,11 +215,19 @@ class SessionLoader:
                     "@ATTRIBUTE answer {NO, PROBABLY_NOT, I_CANT_TELL, PROBABLY_YES, YES}",
                     "@ATTRIBUTE duration NUMERIC",
                     "@ATTRIBUTE explanation STRING",
-                    "@ATTRIBUTE explanation STRING",
-                    "@ATTRIBUTE explanation STRING",
-                    "@ATTRIBUTE explanation STRING",
-                    "@ATTRIBUTE explanation STRING",
-                    "@ATTRIBUTE explanation STRING",
+                    "@ATTRIBUTE consent_date NUMERIC",
+                    "@ATTRIBUTE test1 NUMERIC",
+                    "@ATTRIBUTE test2 NUMERIC",
+                    "@ATTRIBUTE test3 NUMERIC",
+                    "@ATTRIBUTE test4 NUMERIC",
+                    "@ATTRIBUTE grade NUMERIC",
+                    "@ATTRIBUTE testDuration NUMERIC",
+                    "@ATTRIBUTE feedback STRING",
+                    "@ATTRIBUTE gender STRING",
+                    "@ATTRIBUTE years_programming NUMERIC",
+                    "@ATTRIBUTE difficulty NUMERIC",
+                    "@ATTRIBUTE country STRING",
+                    "@ATTRIBUTE age NUMERIC",
                     "",
                     "@DATA",
                     ""

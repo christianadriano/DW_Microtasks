@@ -24,7 +24,7 @@ class SessionLoader:
         self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-1_2014//'
         self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//test//' 
         
-    def t_process(self):
+    def process(self):
         """process the two files"""
         file_session_1= self.root + "session_Run1-Total-25oct.log"
         file_session_2= self.root + "session_Run2-28oct.log"
@@ -120,8 +120,9 @@ class SessionLoader:
     def parse_consent_line_to_dictionary(self,line,suffix):
         """parse the line into a dictionary"""
         tokens = re.split(';',line)    
-        #time_stamp_event = tokens[0]
-        #time_stamp = time_stamp_event[:12]
+        time_stamp_event = tokens[0]
+        time_stamp = time_stamp_event[:12]
+       
         event = (re.split('\=',tokens[0])[1]).strip()
         worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
         tuple_line={"worker_id":worker_ID} #need this to find index the tuple
@@ -136,15 +137,30 @@ class SessionLoader:
             tuple_line["grade"] =  re.split('\=',tokens[6])[1]
             tuple_line["testDuration"] = (re.split('\=',tokens[7])[1]).strip()
         elif(event=="SURVEY"):
-            ## tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
-            tuple_line["feedback"] = self.replace_commas(re.split('\=',tokens[3])[1])    
-            tuple_line["gender"] = re.split('\=',tokens[4])[1]
-            tuple_line["years_programming"] = re.split('\=',tokens[5])[1]
-            tuple_line["difficulty"] = re.split('\=',tokens[6])[1] 
-            tuple_line["country"] = re.split('\=',tokens[7])[1]  
-            tuple_line["age"] = re.split('\=',tokens[8])[1]   
+            tcount = 3
+            try:
+                    ## tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
+                results = self.extract_feedback(tokens)
+                tuple_line["feedback"] = results[0]
+                tcount = results[1]  
+                tuple_line["gender"] = re.split('\=',tokens[tcount])[1]
+                tuple_line["years_programming"] = re.split('\=',tokens[tcount+1])[1]
+                tuple_line["difficulty"] = re.split('\=',tokens[tcount+2])[1] 
+                tuple_line["country"] = re.split('\=',tokens[tcount+3])[1]  
+                tuple_line["age"] = re.split('\=',tokens[tcount+4])[1]  
+            except:
+                print("   That was no valid number.  Try again...")
+                print(time_stamp)
         return (tuple_line)      
            
+           
+    def extract_feedback(self,tokens):
+        """extracts the feedback text and returns next token position """
+        result = []
+        self.replace_commas(re.split('\=',tokens[3])[1])
+       # if(tokens[4].find("Gender=")<0):
+        return (result)
+        
     def match_start_tuple(self,first_eight_characters):
         """tests if the string corresponds to the beginning of new tuple NN:NN:NN"""
         isNewTuple = False
@@ -242,4 +258,4 @@ class SessionLoader:
          
 myObject = SessionLoader()
 myObject.__init__()
-#myObject.process()
+myObject.process()

@@ -144,23 +144,25 @@ class SessionLoader:
         parsed_lines=[]
         for line in file_lines:
             newLine = self.parse_line_to_dictionary(line, suffix)
-            worker_id = newLine["worker_id"]
-            if(worker_id in worker_data):
-                worker_data_dictionary = worker_data[worker_id]
-                newLine.update(worker_data_dictionary)
-            parsed_lines.append(newLine)
+            if(newLine.__len__()>0):
+                worker_id = newLine["worker_id"]
+                if(worker_id in worker_data):
+                    worker_data_dictionary = worker_data[worker_id]
+                    newLine.update(worker_data_dictionary)
+                parsed_lines.append(newLine)
         return parsed_lines
     
     def parse_line_to_dictionary(self,line,suffix):
         """parse the line into a dictionary"""
+        tuple_line = []
         tokens = re.split(';',line)    
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12]
         event = re.split('\=',tokens[0])[1]
-        worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
-        session_ID = re.split('\=',tokens[2])[1]
-        tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}
-        if(event=="MICROTASK"):
+        if(event=="MICROTASK"):#Ignore other events
+            worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
+            session_ID = re.split('\=',tokens[2])[1]
+            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}  
             tuple_line["microtask_id"] = re.split('\=',tokens[3])[1]
             tuple_line["file_name"] = re.split('\=',tokens[4])[1]
             tuple_line["question"] = re.split('\=',tokens[5])[1]

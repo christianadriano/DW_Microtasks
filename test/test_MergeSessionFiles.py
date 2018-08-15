@@ -18,11 +18,11 @@ class Test(unittest.TestCase):
 
     def test_consolidate_lines(self):
         self.sessionLoader = SessionLoader()
-        file_path = "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt"
+        file_path = "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData.txt"
         file_set = self.sessionLoader.load_file(file_path)
         file_set = self.sessionLoader.consolidate_broken_lines(file_set[:])
         print(file_set)
-        self.assertEqual(3,file_set.__len__())
+        self.assertEqual(7,file_set.__len__())
         
     def disabled_test_parse_line_to_dictionary_OpenSession(self):
         self.sessionLoader = SessionLoader()

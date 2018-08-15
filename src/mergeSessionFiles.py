@@ -21,10 +21,10 @@ class SessionLoader:
         '''
         Empty constructor
         '''
-        self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//'
+        self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-1_2014//'
         self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//test//' 
         
-    def process(self):
+    def t_process(self):
         """process the two files"""
         file_session_1= self.root + "session_Run1-Total-25oct.log"
         file_session_2= self.root + "session_Run2-28oct.log"
@@ -242,4 +242,4 @@ class SessionLoader:
          
 myObject = SessionLoader()
 myObject.__init__()
-myObject.process()
+#myObject.process()

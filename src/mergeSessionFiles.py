@@ -160,10 +160,11 @@ class SessionLoader:
         index += 1
         foundEnd = False
         while (index < tokens.__len__() and not foundEnd): #means that did not find the next valid token yet
-#             print("... " + feedback)
+            print("feedback= " + feedback)
 #             print("tokens["+str(index)+"]="+tokens[index]) 
             feedback = feedback +" " + self.replace_commas(tokens[index])
-            if(tokens[index].find(endToken)<0 ):
+            index += 1
+            if(tokens[index].find(endToken)>0 ):
                 foundEnd = True
         results=[feedback,index-1]
         return (results)

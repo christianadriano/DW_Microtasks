@@ -140,26 +140,33 @@ class SessionLoader:
             tcount = 3
             try:
                     ## tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
-                results = self.extract_feedback(tokens)
+                results = self.extract_feedback(tokens,3,"Gender=")
                 tuple_line["feedback"] = results[0]
                 tcount = results[1]  
-                tuple_line["gender"] = re.split('\=',tokens[tcount])[1]
-                tuple_line["years_programming"] = re.split('\=',tokens[tcount+1])[1]
-                tuple_line["difficulty"] = re.split('\=',tokens[tcount+2])[1] 
-                tuple_line["country"] = re.split('\=',tokens[tcount+3])[1]  
-                tuple_line["age"] = re.split('\=',tokens[tcount+4])[1]  
+                tuple_line["gender"] = re.split('\=',tokens[tcount+1])[1]
+                tuple_line["years_programming"] = re.split('\=',tokens[tcount+2])[1]
+                tuple_line["difficulty"] = re.split('\=',tokens[tcount+3])[1] 
+                tuple_line["country"] = re.split('\=',tokens[tcount+4])[1]  
+                tuple_line["age"] = re.split('\=',tokens[tcount+5])[1]  
             except:
                 print("   That was no valid number.  Try again...")
                 print(time_stamp)
         return (tuple_line)      
            
            
-    def extract_feedback(self,tokens):
+    def extract_feedback(self,tokens,index,endToken):
         """extracts the feedback text and returns next token position """
-        result = []
-        self.replace_commas(re.split('\=',tokens[3])[1])
-       # if(tokens[4].find("Gender=")<0):
-        return (result)
+        feedback = self.replace_commas(re.split('\=',tokens[index])[1])
+        index += 1
+        foundEnd = False
+        while (index < tokens.__len__() and not foundEnd): #means that did not find the next valid token yet
+#             print("... " + feedback)
+#             print("tokens["+str(index)+"]="+tokens[index]) 
+            feedback = feedback +" " + self.replace_commas(tokens[index])
+            if(tokens[index].find(endToken)<0 ):
+                foundEnd = True
+        results=[feedback,index-1]
+        return (results)
         
     def match_start_tuple(self,first_eight_characters):
         """tests if the string corresponds to the beginning of new tuple NN:NN:NN"""

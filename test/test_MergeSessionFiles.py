@@ -4,6 +4,7 @@ Created on Mar 20, 2018
 @author: Chris
 '''
 import unittest
+import re
 from MergeSessionFiles import SessionLoader
 
 class Test(unittest.TestCase):
@@ -16,7 +17,7 @@ class Test(unittest.TestCase):
         print("eeeeee")
         self.assertEqual(4,file_lines.__len__())
 
-    def test_consolidate_lines(self):
+    def disabled_test_consolidate_lines(self):
         self.sessionLoader = SessionLoader()
         file_path = "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData.txt"
         file_set = self.sessionLoader.load_file(file_path)
@@ -54,6 +55,12 @@ class Test(unittest.TestCase):
         match_result = self.sessionLoader.match_start_tuple("01:04:01")
         self.assertTrue(match_result, "matching start did not work!")
         print(match_result)
+
+    def test_extract_feedback(self):
+        tokens  = re.split(';', "Feedback=All the best;and thanks!; Gender=Male; Years progr.=4; Difficulty=5; Country=India; Age=23;")    
+        self.sessionLoader = SessionLoader()
+        feedback =self.sessionLoader.extract_feedback(tokens,0,"Gender=")
+        print("feedback extracted = " + feedback[0])
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

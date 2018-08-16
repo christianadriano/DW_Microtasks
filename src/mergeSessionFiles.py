@@ -31,10 +31,11 @@ class SessionLoader:
         file_consent_1= self.root + "consent_Run1-Total-25oct.log"
         file_consent_2= self.root + "consent_Run2-28oct.log"
         
-        tuple_lines = self.run(file_session_1,
-                               file_consent_1,
-                               suffix='1') 
+        tuple_lines = self.run(file_session_2,
+                               file_consent_2,
+                               suffix='2',separator1="%",separator2='%') 
         
+#                                 suffix='2',separator1=";",separator2='\=') 
         #Test files
 #         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData.txt",
 #                                 "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData2.txt",
@@ -44,18 +45,17 @@ class SessionLoader:
         """
         writer = FileReaderWriter()
         writer.write_session_log_arff(tuple_lines, 
-#                                   self.output+'consolidated-test.arff',
-                                    self.output+'consolidated_Run1-Total-25oct.arff',
+                                    self.output+'consolidated_Run2-28oct.arff',
                                     self.get_header_arff())
 
-    def run(self,session_file_name_path,consent_file_name_path, suffix):
+    def run(self,session_file_name_path,consent_file_name_path, suffix,separator1,separator2):
         """ coordinate the loading, Cleaning, Formating, and Writing of Session Files"""
         """ file_name of the session log data, suffix is either 1 or 2, to indicate from which file this register came"""
         session_file_lines = ['time_stamp','event','worker_id','session_id', 'microtask_id','file_name','question','answer','duration','explanation']
         #Load file into a dictionary 
         session_file_lines = self.load_session_file_lines(session_file_name_path)
-        worker_data = self.load_consent_file(consent_file_name_path,suffix)
-        tuple_lines = self.parse_all_to_dictionary(session_file_lines, worker_data, suffix)
+        worker_data = self.load_consent_file(consent_file_name_path,suffix,separator1,separator2)
+        tuple_lines = self.parse_all_to_dictionary(session_file_lines, worker_data, suffix,separator1,separator2)
         #print file_lines to file
         return (tuple_lines)
 
@@ -90,7 +90,7 @@ class SessionLoader:
                 i=i+1
         return processed_lines
                  
-    def load_consent_file(self,consent_file_path, suffix):
+    def load_consent_file(self,consent_file_path, suffix,separator1,separator2):
         """Load all the data from each worker on a dictionary that can be queried later on""" 
         
         """for each worker_id, keeps the data about consent, skill test, and survey"""
@@ -98,19 +98,14 @@ class SessionLoader:
         consent_file_lines = self.load_file(consent_file_path)
         consent_file_lines = self.consolidate_broken_lines(consent_file_lines) 
         for line in consent_file_lines:
-            parsed_line = self.parse_consent_line_to_dictionary(line,suffix) 
+            parsed_line = self.parse_consent_line_to_dictionary(line,suffix,separator1,separator2) 
             key = parsed_line["worker_id"]
-#             event = parsed_line["event"]
 #             print()
 #             print(parsed_line)
 #             print(key)
             if(key in consent_dictionnary):
                 del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 existing_dictionary = consent_dictionnary[key]  
-#                 if(event=="CONSENT"):
-#                     parsed_line.update(existing_dictionary)
-#                     consent_dictionnary[key] = parsed_line
-#                 elif(event =="SKILLTEST" or event=="SURVEY"):
                 existing_dictionary.update(parsed_line)
                 consent_dictionnary[key] = existing_dictionary
             else:
@@ -118,50 +113,47 @@ class SessionLoader:
             
         return(consent_dictionnary)
            
-    def parse_consent_line_to_dictionary(self,line,suffix):
+    def parse_consent_line_to_dictionary(self,line,suffix,separator1,separator2):
         """parse the line into a dictionary"""
-        tokens = re.split(';',line)    
+        tokens = re.split(separator1,line)    
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12]
-       
-        event = (re.split('\=',tokens[0])[1]).strip()
-        worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
+        event = (re.split(separator2,tokens[0])[1]).strip()
+        worker_ID = re.split(separator2,tokens[1])[1]+"_"+suffix
         tuple_line={"worker_id":worker_ID} #need this to find index the tuple
-#         tuple_line={"event":event} #Need this later to make a decision about the order of the fields
         if(event=="CONSENT"):
-            tuple_line["consent_date"] = (re.split('\=',tokens[2])[1]).strip()
+            tuple_line["consent_date"] = (re.split(separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
-            tuple_line["test1"] = re.split('\=',tokens[2])[1]
-            tuple_line["test2"] = re.split('\=',tokens[3])[1]
-            tuple_line["test3"] = re.split('\=',tokens[4])[1]
-            tuple_line["test4"] = re.split('\=',tokens[5])[1]
-            tuple_line["grade"] =  re.split('\=',tokens[6])[1]
-            tuple_line["testDuration"] = (re.split('\=',tokens[7])[1]).strip()
+            tuple_line["test1"] = re.split(separator2,tokens[2])[1]
+            tuple_line["test2"] = re.split(separator2,tokens[3])[1]
+            tuple_line["test3"] = re.split(separator2,tokens[4])[1]
+            tuple_line["test4"] = re.split(separator2,tokens[5])[1]
+            tuple_line["grade"] =  re.split(separator2,tokens[6])[1]
+            tuple_line["testDuration"] = (re.split(separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):
             tcount = 3
             try:
-                    ## tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
                 results = self.extract_feedback(tokens,tcount,"Gender=")
                 tuple_line["feedback"] = results[0]
                 tcount = results[1] + 1 
-                tuple_line["gender"] = re.split('\=',tokens[tcount])[1]
+                tuple_line["gender"] = re.split(separator2,tokens[tcount])[1]
                 tcount += 1
-                tuple_line["years_programming"] = re.split('\=',tokens[tcount])[1]
+                tuple_line["years_programming"] = re.split(separator2,tokens[tcount])[1]
                 tcount += 1
-                tuple_line["difficulty"] = re.split('\=',tokens[tcount])[1] 
+                tuple_line["difficulty"] = re.split(separator2,tokens[tcount])[1] 
                 tcount += 1
-                tuple_line["country"] = re.split('\=',tokens[tcount])[1]  
+                tuple_line["country"] = re.split(separator2,tokens[tcount])[1]  
                 tcount += 1
-                tuple_line["age"] = re.split('\=',tokens[tcount])[1]  
+                tuple_line["age"] = re.split(separator2,tokens[tcount])[1]  
             except:
                 print("   Exception in SURVEY tuple, tcount= "+ str(tcount))
                 print("time_stamp = "+ time_stamp)
         return (tuple_line)      
            
            
-    def extract_feedback(self,tokens,index,endToken):
+    def extract_feedback(self,tokens,index,endToken,separator2):
         """extracts the feedback text and returns next token position """
-        feedback = self.replace_commas(re.split('\=',tokens[index])[1])
+        feedback = self.replace_commas(re.split(separator2,tokens[index])[1])
         index += 1
         while (index < tokens.__len__() and tokens[index].find(endToken)<0): #means that did not find the next valid token yet
 #             print("feedback= " + feedback)
@@ -195,22 +187,22 @@ class SessionLoader:
                 parsed_lines.append(newLine)
         return parsed_lines
     
-    def parse_line_to_dictionary(self,line,suffix):
+    def parse_line_to_dictionary(self,line,suffix,separator1,separator2):
         """parse the line into a dictionary"""
         tuple_line = []
-        tokens = re.split(';',line)    
+        tokens = re.split(separator1,line)    
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12]
-        event = re.split('\=',tokens[0])[1]
+        event = re.split(separator2,tokens[0])[1]
         if(event=="MICROTASK"):#Ignore other events
-            worker_ID = re.split('\=',tokens[1])[1]+"_"+suffix
-            session_ID = re.split('\=',tokens[2])[1]
+            worker_ID = re.split(separator2,tokens[1])[1]+"_"+suffix
+            session_ID = re.split(separator2,tokens[2])[1]
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}  
-            tuple_line["microtask_id"] = re.split('\=',tokens[3])[1]
-            tuple_line["file_name"] = re.split('\=',tokens[4])[1]
-            tuple_line["question"] = re.split('\=',tokens[5])[1]
-            tuple_line["answer"] = re.split('\=',tokens[6])[1]
-            tuple_line["duration"] =  re.split('\=',tokens[7])[1]
+            tuple_line["microtask_id"] = re.split(separator2,tokens[3])[1]
+            tuple_line["file_name"] = re.split(separator2,tokens[4])[1]
+            tuple_line["question"] = self.replace_commas(re.split(separator2,tokens[5])[1])
+            tuple_line["answer"] = re.split(separator2,tokens[6])[1]
+            tuple_line["duration"] =  re.split(separator2,tokens[7])[1]
             tuple_line["explanation"] = self.replace_commas(self.retrieve_explanation(line))          
         return (tuple_line)
         
@@ -219,9 +211,9 @@ class SessionLoader:
         position = line.index("explanation=")
         return(line[position+"explanation=".__len__():line.__len__()])
     
-    def replace_commas(self, explanation_text):
+    def replace_commas(self, text):
         """replace commas with semicolons, because the output file is in CSV format"""
-        return(explanation_text.replace(",",";"))
+        return(text.replace(",",";"))
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"

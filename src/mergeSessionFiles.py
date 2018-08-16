@@ -164,7 +164,7 @@ class SessionLoader:
 #             print("tokens["+str(index)+"]="+tokens[index]) 
             feedback = feedback +" " + self.replace_commas(tokens[index])
             index += 1
-            if(tokens[index].find(endToken)>0 ):
+            if(index > tokens.__len__() or  tokens[index].find(endToken)>0 ):
                 foundEnd = True
         results=[feedback,index-1]
         return (results)

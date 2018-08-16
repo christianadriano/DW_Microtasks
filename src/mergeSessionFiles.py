@@ -118,7 +118,7 @@ class SessionLoader:
         tokens = re.split(separator1,line)    
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12]
-        event = (re.split(separator2,tokens[0])[1]).strip()
+        event = self.extract_event(tokens,separator2)
         worker_ID = re.split(separator2,tokens[1])[1]+"_"+suffix
         tuple_line={"worker_id":worker_ID} #need this to find index the tuple
         if(event=="CONSENT"):
@@ -150,6 +150,14 @@ class SessionLoader:
                 print("time_stamp = "+ time_stamp)
         return (tuple_line)      
            
+    def extract_event(self,tokens,separator2):
+        event_token = tokens.rsplit("EVENT"+separator2)
+        event = event_token[1].rsplit(separator2)[0]
+        event.strip()
+#         else:
+#             event_token =              
+#                     re.split(separator2,tokens[0])[1]).strip()
+
            
     def extract_feedback(self,tokens,index,endToken,separator2):
         """extracts the feedback text and returns next token position """

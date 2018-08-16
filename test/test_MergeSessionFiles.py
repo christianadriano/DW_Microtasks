@@ -57,9 +57,10 @@ class Test(unittest.TestCase):
         print(match_result)
 
     def test_extract_feedback(self):
-        tokens  = re.split(';',"Feedback=All the best;and; thanks!; Gender=Male; Years progr.=4; Difficulty=5; Country=India; Age=23;")    
+        tokens  = re.split(';',"09:06:10.965 [http-bio-8080-exec-5924] INFO  - EVENT=SURVEY; workerId=39; sessionId=496ce9A-5C-8-56; Feedback=rr; Gender=Male; Years progr.=33; Difficulty=2; Country=33; Age=33; ")
+                           #"Feedback=All the best;and; thanks!; Gender=Male; Years progr.=4; Difficulty=5; Country=India; Age=23;")    
         self.sessionLoader = SessionLoader()
-        feedback =self.sessionLoader.extract_feedback(tokens,0,"Gender=")
+        feedback =self.sessionLoader.extract_feedback(tokens,3,"Gender=")
         print("feedback extracted = " + feedback[0])
 
 if __name__ == "__main__":

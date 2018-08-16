@@ -35,16 +35,17 @@ class SessionLoader:
                                file_consent_1,
                                suffix='1') 
         
-#        Test files
-#         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData.txt",
-#                                "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData.txt",
-#                                suffix='1') #file_name="session_Run1-Total-25oct.log",suffix='1')
-        
+        #Test files
+#         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData.txt",
+#                                 "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData2.txt",
+#                                 suffix='1') #file_name="session_Run1-Total-25oct.log",suffix='1')
+#         
         """tuple_lines = tuple_lines + self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData_2.txt", suffix='2') #file_name="session_Run2-28oct.log", suffix='2')
         """
         writer = FileReaderWriter()
         writer.write_session_log_arff(tuple_lines, 
-                                   self.output+'consolidated_Run1-Total-25oct.arff',
+#                                   self.output+'consolidated-test.arff',
+                                    self.output+'consolidated_Run1-Total-25oct.arff',
                                     self.get_header_arff())
 
     def run(self,session_file_name_path,consent_file_name_path, suffix):
@@ -140,17 +141,21 @@ class SessionLoader:
             tcount = 3
             try:
                     ## tuple_line["session_id"] = re.split('\=',tokens[2])[1] #no need
-                results = self.extract_feedback(tokens,3,"Gender=")
+                results = self.extract_feedback(tokens,tcount,"Gender=")
                 tuple_line["feedback"] = results[0]
-                tcount = results[1]  
-                tuple_line["gender"] = re.split('\=',tokens[tcount+1])[1]
-                tuple_line["years_programming"] = re.split('\=',tokens[tcount+2])[1]
-                tuple_line["difficulty"] = re.split('\=',tokens[tcount+3])[1] 
-                tuple_line["country"] = re.split('\=',tokens[tcount+4])[1]  
-                tuple_line["age"] = re.split('\=',tokens[tcount+5])[1]  
+                tcount = results[1] + 1 
+                tuple_line["gender"] = re.split('\=',tokens[tcount])[1]
+                tcount += 1
+                tuple_line["years_programming"] = re.split('\=',tokens[tcount])[1]
+                tcount += 1
+                tuple_line["difficulty"] = re.split('\=',tokens[tcount])[1] 
+                tcount += 1
+                tuple_line["country"] = re.split('\=',tokens[tcount])[1]  
+                tcount += 1
+                tuple_line["age"] = re.split('\=',tokens[tcount])[1]  
             except:
-                print("   That was no valid number.  Try again...")
-                print(time_stamp)
+                print("   Exception in SURVEY tuple, tcount= "+ str(tcount))
+                print("time_stamp = "+ time_stamp)
         return (tuple_line)      
            
            
@@ -158,14 +163,13 @@ class SessionLoader:
         """extracts the feedback text and returns next token position """
         feedback = self.replace_commas(re.split('\=',tokens[index])[1])
         index += 1
-        foundEnd = False
-        while (index < tokens.__len__() and not foundEnd): #means that did not find the next valid token yet
-            print("feedback= " + feedback)
+        while (index < tokens.__len__() and tokens[index].find(endToken)<0): #means that did not find the next valid token yet
+#             print("feedback= " + feedback)
 #             print("tokens["+str(index)+"]="+tokens[index]) 
             feedback = feedback +" " + self.replace_commas(tokens[index])
             index += 1
-            if(index > tokens.__len__() or  tokens[index].find(endToken)>0 ):
-                foundEnd = True
+            #if(index > tokens.__len__() or   ):
+            #    foundEnd = True
         results=[feedback,index-1]
         return (results)
         

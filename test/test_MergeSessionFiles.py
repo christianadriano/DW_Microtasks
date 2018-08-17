@@ -56,13 +56,29 @@ class Test(unittest.TestCase):
         self.assertTrue(match_result, "matching start did not work!")
         print(match_result)
 
-    def test_extract_feedback(self):
+    def disabled_test_extract_feedback(self):
         tokens  = re.split(';',"09:06:10.965 [http-bio-8080-exec-5924] INFO  - EVENT=SURVEY; workerId=39; sessionId=496ce9A-5C-8-56; Feedback=rr; Gender=Male; Years progr.=33; Difficulty=2; Country=33; Age=33; ")
                            #"Feedback=All the best;and; thanks!; Gender=Male; Years progr.=4; Difficulty=5; Country=India; Age=23;")    
         self.sessionLoader = SessionLoader()
         feedback =self.sessionLoader.extract_feedback(tokens,3,"Gender=")
         print("feedback extracted = " + feedback[0])
+        
+    def test_extract_event_file1(self):
+        line = "09:06:10.965 [http-bio-8080-exec-5924] INFO  - EVENT=SURVEY; workerId=39; sessionId=496ce9A-5C-8-56; Feedback=rr; Gender=Male; Years progr.=33; Difficulty=2; Country=33; Age=33; "
+        self.sessionLoader = SessionLoader()
+        event = self.sessionLoader.extract_event(line, separator1=";", separator2="=")
+        self.assertTrue(event=="SURVEY", "extract event did not work, event extracted = "+event)
+        print(event)
 
+    def test_extract_event_file2(self):
+        line = "20:58:33.938 [http-bio-8080-exec-6131] INFO  - EVENT%SURVEY% workerId%27% sessionId%498ce-4A0g-106% Feedback%None% Gender%Male% Years progr.%2% Difficulty%6% Country%USA% Age%31% "
+        self.sessionLoader = SessionLoader()
+        event = self.sessionLoader.extract_event(line, separator1="%", separator2="%")
+        self.assertTrue(event=="SURVEY", "extract event did not work, event extracted = "+event)
+        print(event)
+
+
+        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

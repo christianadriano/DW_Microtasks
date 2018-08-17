@@ -153,9 +153,13 @@ class SessionLoader:
     def extract_event(self,tokens,separator1,separator2):
         event_token = tokens.rsplit("INFO  - EVENT")
         event_token = event_token[1].rsplit(separator1)
-        event = event_token[1]
-        if(event.find(separator1)>0):
-            event = event[1:] #remove it
+        index=0
+        if(event_token[0].__len__()==0):
+            index=1
+        event = event_token[index].strip()
+        
+        if(event.find(separator2)>=0):
+            event = event[1:] #removes the separator
         return event
     
     def extract_feedback(self,tokens,index,endToken,separator2):
@@ -269,4 +273,4 @@ class SessionLoader:
          
 myObject = SessionLoader()
 myObject.__init__()
-myObject.process()
+#myObject.process()

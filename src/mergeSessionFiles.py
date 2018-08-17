@@ -150,15 +150,14 @@ class SessionLoader:
                 print("time_stamp = "+ time_stamp)
         return (tuple_line)      
            
-    def extract_event(self,tokens,separator2):
-        event_token = tokens.rsplit("EVENT"+separator2)
-        event = event_token[1].rsplit(separator2)[0]
-        event.strip()
-#         else:
-#             event_token =              
-#                     re.split(separator2,tokens[0])[1]).strip()
-
-           
+    def extract_event(self,tokens,separator1,separator2):
+        event_token = tokens.rsplit("INFO  - EVENT")
+        event_token = event_token[1].rsplit(separator1)
+        event = event_token[1]
+        if(event.find(separator1)>0):
+            event = event[1:] #remove it
+        return event
+    
     def extract_feedback(self,tokens,index,endToken,separator2):
         """extracts the feedback text and returns next token position """
         feedback = self.replace_commas(re.split(separator2,tokens[index])[1])

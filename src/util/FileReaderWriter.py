@@ -29,4 +29,42 @@ class FileReaderWriter(object):
             str_accum = str_accum + "," + item
         str_accum = str_accum[1:str_accum.__len__()]
         return str_accum
-        
+    
+    def get_header_arff(self):
+        author ="Christian Medeiros Adriano"
+        date="August, 2018"
+        header_lines=["% 1. Title: First Failure Understanding Database",
+                    "%" ,
+                    "% 2. Sources:",
+                    "%      (a) Creator: Christian Medeiros Adriano",
+                    "%      (b) Date: August, 2018",
+                    "%" ,
+                    "@RELATION Task",
+                    "",
+                    "@ATTRIBUTE time_stamp  DATE 'HH:mm:ss.SSS'",
+                    "@ATTRIBUTE worker_id  NUMERIC",
+                    "@ATTRIBUTE session_id   STRING",
+                    "@ATTRIBUTE microtask_id NUMERIC",
+                    "@ATTRIBUTE file_name STRING",
+                    "@ATTRIBUTE question STRING",
+                    "@ATTRIBUTE answer {NO, PROBABLY_NOT, I_CANT_TELL, PROBABLY_YES, YES}",
+                    "@ATTRIBUTE duration NUMERIC",
+                    "@ATTRIBUTE explanation STRING",
+                    "@ATTRIBUTE consent_date NUMERIC",
+                    "@ATTRIBUTE test1 NUMERIC",
+                    "@ATTRIBUTE test2 NUMERIC",
+                    "@ATTRIBUTE test3 NUMERIC",
+                    "@ATTRIBUTE test4 NUMERIC",
+                    "@ATTRIBUTE grade NUMERIC",
+                    "@ATTRIBUTE testDuration NUMERIC",
+                    "@ATTRIBUTE feedback STRING",
+                    "@ATTRIBUTE gender STRING",
+                    "@ATTRIBUTE years_programming NUMERIC",
+                    "@ATTRIBUTE difficulty NUMERIC",
+                    "@ATTRIBUTE country STRING",
+                    "@ATTRIBUTE age NUMERIC",
+                    "",
+                    "@DATA",
+                    ""
+                    ]
+        return header_lines    

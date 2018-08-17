@@ -32,12 +32,13 @@ class FileReaderWriter(object):
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
-        date="August, 2018"
-        header_lines=["% 1. Title: First Failure Understanding Database",
+        date="October, 28, 2014"
+        header_lines=["% 1. Title: Microtasks from Experiment One",
                     "%" ,
                     "% 2. Sources:",
                     "%      (a) Creator: Christian Medeiros Adriano",
-                    "%      (b) Date: August, 2018",
+                    "%      (b) Date of Experiment: October 20, 2014",
+                    "%      (c) Paper draft = https://arxiv.org/abs/1612.03015",
                     "%" ,
                     "@RELATION Task",
                     "",

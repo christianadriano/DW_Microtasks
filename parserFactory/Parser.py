@@ -32,24 +32,15 @@ class Parser:
     
     def parse_session_line_to_dictionary(self,line):
         pass
-    
-    @staticmethod
-    def extract_feedback(self,tokens,index,endToken,separator):
-        """extracts the feedback text and returns next token position """
-        feedback = re.split(separator,tokens[index])[1].replace(",",";")
-        index += 1
-        while (index < tokens.__len__() and tokens[index].find(endToken)<0): #means that did not find the next valid token yet
-            feedback = feedback +" " + tokens[index].replace(",",";")
-            index += 1
-        results=[feedback,index-1]
-        return (results) 
      
     @staticmethod
     def factory_method(self,worker_id_suffix,separator1,separator2):
         if(worker_id_suffix =="1"):
             return Parser_Run1("1",separator1,separator2)
-        else:
+        elif (worker_id_suffix =="2"):
             return Parser_Run2("2",separator1,separator2)
+        else:
+            return Parser_Run3("3",separator1,separator2)
  
  
 class Parser_Run3(Parser):

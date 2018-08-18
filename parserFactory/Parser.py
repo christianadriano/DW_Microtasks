@@ -57,10 +57,13 @@ class Parser_Run3(Parser):
         super().__init__(suffix,separator1,separator2)
      
     def parse_consent_line_to_dictionary(self,line):
-        
-        """parse the line into a dictionary"""
+        '''
+        Parses the line into a dictionary
+        '''
         tokens = re.split(self.separator1,line)    
-        event = tokens[1].strip()       
+        event = tokens[1].strip()
+        if(event=="ERROR"):
+            return []
         worker_ID = tokens[3]+"_"+self.suffix
         tuple_line={"worker_id":worker_ID} #need this to find index the tuple
         tuple_line["file_name"] = tokens[5].strip()
@@ -93,7 +96,7 @@ class Parser_Run3(Parser):
         tuple_line = []
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12]
+        time_stamp = time_stamp_event[:28]
         event = tokens[1]
         if(event=="MICROTASK"):#Ignore other events
             worker_ID = tokens[3]+"_"+self.suffix

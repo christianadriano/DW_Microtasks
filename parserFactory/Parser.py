@@ -1,11 +1,11 @@
 '''
 Created on Aug 17, 2018
 
-@author: Chris
+This module keeps the parsers that format and consolidate three files from two experiments
+
+@author: Christian Adriano
 '''
 import re
-
-
 
 class Parser:
     '''
@@ -52,10 +52,77 @@ class Parser:
             return Parser_Run2("2",separator1,separator2)
  
  
+class Parser_Run3(Parser):
+    '''
+    Parses data from the second experiment
+    '''
+    suffix = "3"
+    file_name = "Experiment_2"
+    
+    def __init__(self,suffix,separator1,separator2):
+        '''
+        Constructor
+        '''
+        super().__init__(suffix,separator1,separator2)
+     
+    def parse_consent_line_to_dictionary(self,line):
+        
+        """parse the line into a dictionary"""
+        tokens = re.split(self.separator1,line)    
+        event = tokens[1].strip()       
+        worker_ID = tokens[3]+"_"+self.suffix
+        tuple_line={"worker_id":worker_ID} #need this to find index the tuple
+        tuple_line["file_name"] = tokens[5].strip()
+
+        if(event=="CONSENT"):
+            tuple_line["consent_date"] = tokens[7].strip()
+        elif(event=="SKILLTEST"):
+            tuple_line["test1"] = tokens[7].strip()
+            tuple_line["test2"] = tokens[9].strip()
+            tuple_line["test3"] = tokens[11].strip()
+            tuple_line["test4"] = tokens[13].strip()
+            tuple_line["test5"] = tokens[15].strip()
+            tuple_line["grade"] = tokens[17].strip()
+            tuple_line["testDuration"] = tokens[15].strip()
+        elif(event=="SURVEY"):
+                tuple_line["language"] = tokens[7]
+                tuple_line["experience"] = tokens[9]
+                tuple_line["gender"] = tokens[11]
+                tuple_line["learned"] = tokens[13]
+                tuple_line["years_programming"] = tokens[11]
+                tuple_line["country"] = tokens[15]
+                tuple_line["age"] = tokens[17]
+        elif(event=="FEEDBACK"):
+                tuple_line["feedback"] = tokens[7].replace(",",";")
+        return (tuple_line)       
+     
+    
+    def parse_session_line_to_dictionary(self,line):
+        """parse the line into a dictionary"""
+        tuple_line = []
+        tokens = re.split(self.separator1,line)    
+        time_stamp_event = tokens[0]
+        time_stamp = time_stamp_event[:12]
+        event = tokens[1]
+        if(event=="MICROTASK"):#Ignore other events
+            worker_ID = tokens[3]+"_"+self.suffix
+            session_ID = tokens[5]
+            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}  
+            tuple_line["microtask_id"] = tokens[7]
+            tuple_line["file_name"] = tokens[9]
+            tuple_line["question"] = tokens[11].replace(",",";")
+            tuple_line["answer"] = tokens[13]
+            tuple_line["duration"] = tokens[15]
+            index = line.find("explanation%") + "explanation%".__len__()
+            tuple_line["explanation"] = line[index:].replace(",",";")          
+        return (tuple_line) 
+ 
 class Parser_Run2(Parser):
     '''
-    classdocs
+    Parser for the run 2 of experiment 1
     '''
+    suffix = "2"
+    file_name = "Experiment_1"
     
     def __init__(self,suffix,separator1,separator2):
         '''
@@ -113,8 +180,10 @@ class Parser_Run2(Parser):
     
 class Parser_Run1(Parser):
     '''
-    classdocs
+    Parser for the run 1 of experiment 1
     '''
+    suffix = "1"
+    file_name = "Experiment_1"
     
     def __init__(self,suffix,separator1,separator2):
         '''

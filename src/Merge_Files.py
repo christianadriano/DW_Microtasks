@@ -142,10 +142,10 @@ class Merger_2(Merge_Files):
     def process(self):
         """process the two files from experiment-2"""
         tuple_lines = self.run(
-                                self.testInput + "sessionTestData_3.txt",
-                                self.testInput + "consentTestData3.txt",
-                                #self.root + "session-log_consolidated_final.txt",
-                                #self.root + "consent-log_consolidated_final.txt",
+                                #self.testInput + "sessionTestData_3.txt",
+                                #self.testInput + "consentTestData3.txt",
+                                self.root + "session-log_consolidated_final.txt",
+                                self.root + "consent-log_consolidated_final.txt",
                                 Parser.Parser.factory_method(self,worker_id_suffix='3', separator1="%", separator2="%")
                                ) 
         
@@ -174,7 +174,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE session_id   STRING",
                     "@ATTRIBUTE microtask_id NUMERIC",
-                    "@ATTRIBUTE question_type {VARIABLE_DECLARATION,METHOD_INVOCATION,IF_CONDITIONAL,FOR_LOOP"
+                    "@ATTRIBUTE question_type {VARIABLE_DECLARATION,METHOD_INVOCATION,IF_CONDITIONAL,FOR_LOOP,WHILE_LOOP"
                     "@ATTRIBUTE question STRING",
                     "@ATTRIBUTE answer {NO THERE IS NOT AN ISSUE, I CANNOT TELL, YES THERE IS AN ISSUE}",
                     "@ATTRIBUTE confidence {1-low,2,3,4,5-high}",
@@ -191,12 +191,13 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE testDuration NUMERIC",
                     "@ATTRIBUTE language STRING",
                     "@ATTRIBUTE experience {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other",
-                    "@ATTRIBUTE learned {University, Books, Web, Other}",
-                    "@ATTRIBUTE gender {Female, Male, Prefer_not_to_tell}",
+                    "@ATTRIBUTE learned {High School, University, Web, Other}",
+                    "@ATTRIBUTE gender {Female, Male, Other}",
                     "@ATTRIBUTE years_programming NUMERIC",
                     "@ATTRIBUTE country STRING",
                     "@ATTRIBUTE age NUMERIC",
                     "@ATTRIBUTE feedback STRING",
+                    "@ATTRIBUTE quit_fileName STRING",
                     "@ATTRIBUTE quit_reason {TOO DIFFICULT,TOO LONG, TOO BORING, OTHER}",
                     "",
                     "@DATA",

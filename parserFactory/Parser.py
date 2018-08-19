@@ -88,6 +88,8 @@ class Parser_Run3(Parser):
                 tuple_line["age"] = tokens[17]
         elif(event=="FEEDBACK"):
                 tuple_line["feedback"] = tokens[7].replace(",",";")
+        elif(event=="QUIT"):
+                tuple_line["quit_reason"] = tokens[7].replace(",",";")
         return (tuple_line)       
      
     

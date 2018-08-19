@@ -19,14 +19,7 @@ class Parser:
         self.suffix = worker_id_suffix
         self.separator1 = separator1
         self.separator2 = separator2
-        
-    def get_suffix(self):
-        return self.suffix  
-    
-    def get_separators(self):
-        separators = [self.separator1,self.separator2]
-        return separators
-     
+               
     def parse_consent_line_to_dictionary(self,line):
         pass
     

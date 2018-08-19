@@ -77,18 +77,19 @@ class Parser_Run3(Parser):
             tuple_line["test4"] = tokens[13].strip()
             tuple_line["test5"] = tokens[15].strip()
             tuple_line["grade"] = tokens[17].strip()
-            tuple_line["testDuration"] = tokens[15].strip()
+            tuple_line["testDuration"] = tokens[19].strip()
         elif(event=="SURVEY"):
-                tuple_line["language"] = tokens[7]
+                tuple_line["language"] = tokens[7].replace(",",";")
                 tuple_line["experience"] = tokens[9]
                 tuple_line["gender"] = tokens[11]
-                tuple_line["learned"] = tokens[13]
-                tuple_line["years_programming"] = tokens[11]
-                tuple_line["country"] = tokens[15]
-                tuple_line["age"] = tokens[17]
+                tuple_line["learned"] = tokens[13].replace(",",";")
+                tuple_line["years_programming"] = tokens[15]
+                tuple_line["country"] = tokens[17]
+                tuple_line["age"] = tokens[19]
         elif(event=="FEEDBACK"):
                 tuple_line["feedback"] = tokens[7].replace(",",";")
         elif(event=="QUIT"):
+                tuple_line["quit_fileName"] = tokens[5]
                 tuple_line["quit_reason"] = tokens[7].replace(",",";")
         return (tuple_line)       
      

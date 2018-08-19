@@ -101,17 +101,28 @@ class Parser_Run3(Parser):
         time_stamp = time_stamp_event[:28]
         event = tokens[1]
         if(event=="MICROTASK"):#Ignore other events
-            worker_ID = tokens[3]+"_"+self.suffix
-            session_ID = tokens[5]
-            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}  
-            tuple_line["microtask_id"] = tokens[7]
-            tuple_line["file_name"] = tokens[9]
-            tuple_line["question"] = tokens[11].replace(",",";")
-            tuple_line["answer"] = tokens[13]
-            tuple_line["duration"] = tokens[15]
+            tuple_line = {"time_stamp":time_stamp}
+            tuple_line["event"] = event
+            tuple_line["worker_id"] = tokens[3]+"_"+self.suffix
+            tuple_line["file_name"] = tokens[5]
+            tuple_line["session_id"] = tokens[7]
+            tuple_line["microtask_id"] = tokens[9]
+            tuple_line["question_type"] = tokens[11]
+            tuple_line["question"] = tokens[13].replace(",",";")
+            tuple_line["answer"] = tokens[15].replace(",",";")
+            tuple_line["duration"] = tokens[17]
             index = line.find("explanation%") + "explanation%".__len__()
             tuple_line["explanation"] = line[index:].replace(",",";")          
         return (tuple_line) 
+ 
+    def extract_answer(self,tokens,index):
+        ''' necessary because answers are also separated by commas, e.g. No, there is not an issue '''
+        if(tokens[index]=="I DON'T KNOW"):
+            return [tokens[index],index]
+        else:
+            answer = tokens[index] + ";" + tokens[index+1]
+            return [answer,index+1]
+ 
  
 class Parser_Run2(Parser):
     '''
@@ -160,9 +171,9 @@ class Parser_Run2(Parser):
         time_stamp = time_stamp_event[:12]
         event = tokens[1]
         if(event=="MICROTASK"):#Ignore other events
-            worker_ID = tokens[3]+"_"+self.suffix
-            session_ID = tokens[5]
-            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}  
+            worker_id = tokens[3]+"_"+self.suffix
+            session_id = tokens[5]
+            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = tokens[7]
             tuple_line["file_name"] = tokens[9]
             tuple_line["question"] = tokens[11].replace(",",";")
@@ -233,8 +244,7 @@ class Parser_Run1(Parser):
             feedback = feedback +" " + tokens[index].replace(",",";")
             index += 1
         results=[feedback,index-1]
-        return (results) 
-    
+        return (results)    
     
     def parse_session_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
@@ -244,9 +254,9 @@ class Parser_Run1(Parser):
         time_stamp = time_stamp_event[:12]
         event = re.split(self.separator2,tokens[0])[1]
         if(event=="MICROTASK"):#Ignore other events
-            worker_ID = re.split(self.separator2,tokens[1])[1]+"_"+self.suffix
-            session_ID = re.split(self.separator2,tokens[2])[1]
-            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_ID,"session_id":session_ID}  
+            worker_id = re.split(self.separator2,tokens[1])[1]+"_"+self.suffix
+            session_id = re.split(self.separator2,tokens[2])[1]
+            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1]
             tuple_line["question"] = re.split(self.separator2,tokens[5])[1].replace(",",";")  

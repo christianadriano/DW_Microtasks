@@ -137,12 +137,15 @@ class Merger_2(Merge_Files):
         super().__init__()
         self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-2_2015//'
         self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//output//'
+        self.testInput = 'C://Users//Chris//Documents//GitHub//DW_Microtasks//test//'
     
     def process(self):
         """process the two files from experiment-2"""
         tuple_lines = self.run(
-                                self.root + "session-log_consolidated_final.txt",
-                                self.root + "consent-log_consolidated_final.txt",
+                                self.testInput + "sessionTestData_3.txt",
+                                self.testInput + "consentTestData3.txt",
+                                #self.root + "session-log_consolidated_final.txt",
+                                #self.root + "consent-log_consolidated_final.txt",
                                 Parser.Parser.factory_method(self,worker_id_suffix='3', separator1="%", separator2="%")
                                ) 
         
@@ -168,9 +171,10 @@ class Merger_2(Merge_Files):
                     "",
                     "@ATTRIBUTE time_stamp  DATE 'WW YYYY MMM DD HH:mm:ss.SSS'",
                     "@ATTRIBUTE worker_id  NUMERIC",
+                    "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE session_id   STRING",
                     "@ATTRIBUTE microtask_id NUMERIC",
-                    "@ATTRIBUTE file_name STRING",
+                    "@ATTRIBUTE question_type {VARIABLE_DECLARATION,METHOD_INVOCATION,IF_CONDITIONAL,FOR_LOOP"
                     "@ATTRIBUTE question STRING",
                     "@ATTRIBUTE answer {NO THERE IS NOT AN ISSUE, I CANNOT TELL, YES THERE IS AN ISSUE}",
                     "@ATTRIBUTE confidence {1-low,2,3,4,5-high}",

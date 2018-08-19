@@ -193,6 +193,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE country STRING",
                     "@ATTRIBUTE age NUMERIC",
                     "@ATTRIBUTE feedback STRING",
+                    "@ATTRIBUTE quit_reason {TOO DIFFICULT,TOO LONG, TOO BORING, OTHER}",
                     "",
                     "@DATA",
                     ""

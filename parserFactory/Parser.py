@@ -115,15 +115,6 @@ class Parser_Run3(Parser):
             tuple_line["explanation"] = line[index:].replace(",",";")          
         return (tuple_line) 
  
-    def extract_answer(self,tokens,index):
-        ''' necessary because answers are also separated by commas, e.g. No, there is not an issue '''
-        if(tokens[index]=="I DON'T KNOW"):
-            return [tokens[index],index]
-        else:
-            answer = tokens[index] + ";" + tokens[index+1]
-            return [answer,index+1]
- 
- 
 class Parser_Run2(Parser):
     '''
     Parser for the run 2 of experiment 1

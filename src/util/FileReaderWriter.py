@@ -15,9 +15,11 @@ class FileReaderWriter(object):
     def write_session_log_arff(self,tuple_lines,output_file_path,header_lines):
         """write the content to an arff file"""
         with open(output_file_path, 'a') as the_file:
+            """Write header"""
             for line in header_lines:     
                 the_file.write(line)
                 the_file.write("\n")
+            """Write microtask outcomes"""
             for line in tuple_lines:
                 the_file.write(self.convert_to_comma_separated(line))
                 the_file.write("\n")

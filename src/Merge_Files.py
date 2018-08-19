@@ -75,10 +75,10 @@ class Merge_Files:
             if(parsed_line.__len__()>0): #There are lines that should not be processed, such as ERROR because they don't have a worker ID
                 key = parsed_line["worker_id"]
                 if(key in consent_dictionnary):
-                    del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                     existing_dictionary = consent_dictionnary[key]  
                     existing_dictionary.update(parsed_line)
                     consent_dictionnary[key] = existing_dictionary
+                    #del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 else:
                     consent_dictionnary[key] = parsed_line        
         return(consent_dictionnary)
@@ -216,23 +216,26 @@ class Merger_1(Merge_Files):
         '''
         self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-1_2014//'
         self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//output//' 
+        self.testInput ='C://Users//Chris//Documents//GitHub//DW_Microtasks//test//'
         
     def process(self):
         """process the two files"""
         
         tuple_lines_1 = self.run(
-                                self.root + "session_Run1-Total-25oct.log",
-                                self.root + "consent_Run1-Total-25oct.log",
+                               self.root + "session_Run1-Total-25oct.log",
+                               self.root + "consent_Run1-Total-25oct.log",
+                               #self.testInput + "sessionTestData.txt",
+                               #self.testInput + "consentTestData.txt",
                                 Parser.Parser.factory_method(self,worker_id_suffix='1', separator1=";", separator2="=")
                                ) 
         
-        tuple_lines_2 = self.run(
-                                 self.root + "session_Run2-28oct.log",
-                                 self.root + "consent_Run2-28oct.log",
-                                 Parser.Parser.factory_method(self,worker_id_suffix='2',separator1="%",separator2="%")
-                               ) 
+#         tuple_lines_2 = self.run(
+#                                  self.root + "session_Run2-28oct.log",
+#                                  self.root + "consent_Run2-28oct.log",
+#                                  Parser.Parser.factory_method(self,worker_id_suffix='2',separator1="%",separator2="%")
+#                                ) 
         
-        tuple_lines = tuple_lines_1 + tuple_lines_2
+        tuple_lines = tuple_lines_1 #+ tuple_lines_2
         
 #         #Test files
 #         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData_2.txt",
@@ -248,10 +251,10 @@ class Merger_1(Merge_Files):
 
 
     
-        def get_header_arff(self):
-            author ="Christian Medeiros Adriano"
-            date="October, 28, 2014"
-            header_lines=["% 1. Title: Microtasks from Experiment One",
+    def get_header_arff(self):
+        author ="Christian Medeiros Adriano"
+        date="October, 28, 2014"
+        header_lines=["% 1. Title: Microtasks from Experiment One",
                     "%" ,
                     "% 2. Sources:",
                     "%      (a) Creator: Christian Medeiros Adriano",
@@ -286,12 +289,12 @@ class Merger_1(Merge_Files):
                     "@DATA",
                     ""
                     ]
-            return header_lines    
+        return header_lines    
     
 #CONTROLLER CODE
 
 merger = Merge_Files()
-parser = merger.merger_factory(experiment="1")
+parser = merger.merger_factory(experiment="2")
 parser.process()
 
 

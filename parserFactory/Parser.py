@@ -160,7 +160,7 @@ class Parser_Run2(Parser):
             session_id = tokens[5]
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = tokens[7]
-            tuple_line["file_name"] = tokens[9]
+            tuple_line["file_name"] = tokens[9].strip()
             tuple_line["question"] = tokens[11].replace(",",";")
             tuple_line["answer"] = tokens[13]
             tuple_line["duration"] = tokens[15]
@@ -236,7 +236,7 @@ class Parser_Run1(Parser):
             session_id = re.split(self.separator2,tokens[2])[1]
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = re.split(self.separator2,tokens[3])[1]
-            tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1]
+            tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1].strip()
             tuple_line["question"] = re.split(self.separator2,tokens[5])[1].replace(",",";")  
             tuple_line["answer"] = re.split(self.separator2,tokens[6])[1]
             tuple_line["duration"] =  re.split(self.separator2,tokens[7])[1]

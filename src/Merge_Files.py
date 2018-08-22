@@ -230,13 +230,13 @@ class Merger_1(Merge_Files):
                                 Parser.Parser.factory_method(self,worker_id_suffix='1', separator1=";", separator2="=")
                                ) 
         
-#         tuple_lines_2 = self.run(
-#                                  self.root + "session_Run2-28oct.log",
-#                                  self.root + "consent_Run2-28oct.log",
-#                                  Parser.Parser.factory_method(self,worker_id_suffix='2',separator1="%",separator2="%")
-#                                ) 
+        tuple_lines_2 = self.run(
+                                 self.root + "session_Run2-28oct.log",
+                                 self.root + "consent_Run2-28oct.log",
+                                 Parser.Parser.factory_method(self,worker_id_suffix='2',separator1="%",separator2="%")
+                               ) 
         
-        tuple_lines = tuple_lines_1 #+ tuple_lines_2
+        tuple_lines = tuple_lines_1 + tuple_lines_2
         
 #         #Test files
 #         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData_2.txt",

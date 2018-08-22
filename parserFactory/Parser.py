@@ -98,7 +98,7 @@ class Parser_Run3(Parser):
             tuple_line = {"time_stamp":time_stamp}
             tuple_line["event"] = event
             tuple_line["worker_id"] = tokens[3]+"_"+self.suffix
-            tuple_line["file_name"] = tokens[5]
+            tuple_line["file_name"] = tokens[5].strip()
             tuple_line["session_id"] = tokens[7]
             tuple_line["microtask_id"] = tokens[9]
             tuple_line["question_type"] = tokens[11]

@@ -250,7 +250,7 @@ class Merger_1(Merge_Files):
                                     self.output+'consolidated_Final_Experiment_1.arff',
                                     self.get_header_arff())
 
-
+# {11ByteArrayBuffer_buggy.java,8buggy_AbstractReviewSection_buggy.txt,1buggy_ApacheCamel.txt,9buggy_Hystrix_buggy.txt,13buggy_VectorClock_buggy.txt,10HashPropertyBuilder_buggy.java,3buggy_PatchSetContentRemoteFactory_buggy.txt,7buggy_ReviewTaskMapper_buggy.txt,6ReviewScopeNode_buggy.java,2SelectTranslator_buggy.java}
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
@@ -269,7 +269,7 @@ class Merger_1(Merge_Files):
                     "@ATTRIBUTE worker_id  STRING",
                     "@ATTRIBUTE session_id STRING",
                     "@ATTRIBUTE microtask_id STRING",
-                    "@ATTRIBUTE file_name {11ByteArrayBuffer_buggy.java,8buggy_AbstractReviewSection_buggy.txt,1buggy_ApacheCamel.txt,9buggy_Hystrix_buggy.txt,13buggy_VectorClock_buggy.txt,10HashPropertyBuilder_buggy.java,3buggy_PatchSetContentRemoteFactory_buggy.txt,7buggy_ReviewTaskMapper_buggy.txt,6ReviewScopeNode_buggy.java,2SelectTranslator_buggy.java}",
+                    "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE question STRING",
                     "@ATTRIBUTE answer {NO, PROBABLY_NOT, I_CANT_TELL, PROBABLY_YES, YES}",
                     "@ATTRIBUTE duration NUMERIC",

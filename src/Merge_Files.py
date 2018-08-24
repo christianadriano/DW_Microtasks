@@ -153,7 +153,8 @@ class Merger_2(Merge_Files):
         writer.write_session_log_arff(
                                     tuple_lines, 
                                     self.output+'consolidated_Final_Experiment_2.arff',
-                                    self.get_header_arff()
+                                    self.get_header_arff(),
+                                    tuple_size=31
                                     )
 
 
@@ -248,7 +249,9 @@ class Merger_1(Merge_Files):
         writer.write_session_log_arff(tuple_lines, 
 #                                       self.output+'consolidated_TEST_Run2.arff',
                                     self.output+'consolidated_Final_Experiment_1.arff',
-                                    self.get_header_arff())
+                                    self.get_header_arff(),
+                                    tuple_size=23
+                                    )
 
 # {11ByteArrayBuffer_buggy.java,8buggy_AbstractReviewSection_buggy.txt,1buggy_ApacheCamel.txt,9buggy_Hystrix_buggy.txt,13buggy_VectorClock_buggy.txt,10HashPropertyBuilder_buggy.java,3buggy_PatchSetContentRemoteFactory_buggy.txt,7buggy_ReviewTaskMapper_buggy.txt,6ReviewScopeNode_buggy.java,2SelectTranslator_buggy.java}
     

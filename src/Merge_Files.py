@@ -11,7 +11,6 @@ Processes SessionLog and ConsentLog Files for SECOND Run Experiment 1
 import re
 from util.FileReaderWriter import FileReaderWriter  
 from parserFactory import Parser
-from _overlapped import NULL
 
 class Merge_Files:
     '''
@@ -135,9 +134,9 @@ class Merger_2(Merge_Files):
         Initialize folders 
         '''
         super().__init__()
-        self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-2_2015//'
-        self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//output//'
-        self.testInput = 'C://Users//Chris//Documents//GitHub//DW_Microtasks//test//'
+        self.root = 'C://Users//Christian//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-2_2015//'
+        self.output ='C://Users//Christian//Documents//GitHub//DW_Microtasks//output//'
+        self.testInput = 'C://Users//Christian//Documents//GitHub//DW_Microtasks//test//'
     
     def process(self):
         """process the two files from experiment-2"""
@@ -216,9 +215,9 @@ class Merger_1(Merge_Files):
         '''
         Initialize folders 
         '''
-        self.root = 'C://Users//Chris//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-1_2014//'
-        self.output ='C://Users//Chris//Documents//GitHub//DW_Microtasks//output//' 
-        self.testInput ='C://Users//Chris//Documents//GitHub//DW_Microtasks//test//'
+        self.root = 'C://Users//Christian//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-1_2014//'
+        self.output ='C://Users//Christian//Documents//GitHub//DW_Microtasks//output//' 
+        self.testInput ='C://Users//Christian//Documents//GitHub//DW_Microtasks//test//'
         
     def process(self):
         """process the two files"""
@@ -244,7 +243,7 @@ class Merger_1(Merge_Files):
 #                                 "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData2.txt",
 #                                 suffix='2',separator="%") #file_name="session_Run1-Total-25oct.log",suffix='1')
          
-        """tuple_lines = tuple_lines + self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//testData_2.txt", suffix='2') #file_name="session_Run2-28oct.log", suffix='2')"""
+        """tuple_lines = tuple_lines + self.run("C://Users//Christian//Documents//GitHub//DW_Microtasks//test//testData_2.txt", suffix='2') #file_name="session_Run2-28oct.log", suffix='2')"""
         writer = FileReaderWriter()
         writer.write_session_log_arff(tuple_lines, 
 #                                       self.output+'consolidated_TEST_Run2.arff',

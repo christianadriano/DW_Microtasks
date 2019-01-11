@@ -76,7 +76,7 @@ class Parser_Run3(Parser):
                 tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
                 tuple_line["experience"] = tokens[9]
                 tuple_line["gender"] = tokens[11].replace(" ", "_")
-                tuple_line["learned"] = tokens[13].replace(",",";")
+                tuple_line["learned"] = tokens[13].replace(",",";").replace(" ", "_")
                 tuple_line["years_programming"] = tokens[15]
                 tuple_line["country"] = self.quote + tokens[17] + self.quote
                 tuple_line["age"] = tokens[19]
@@ -104,7 +104,7 @@ class Parser_Run3(Parser):
             tuple_line["microtask_id"] = tokens[9]
             tuple_line["question_type"] = tokens[11]
             tuple_line["question"] = self.quote + tokens[13].replace(",",";").replace("\"","'") + self.quote
-            tuple_line["answer"] = tokens[15].replace(",",";")
+            tuple_line["answer"] = tokens[15].replace(",",";").replace(" ","_")
             tuple_line["duration"] = tokens[17]
             index = line.find("explanation%") + "explanation%".__len__()
             tuple_line["explanation"] = line[index:].replace(",",";")          

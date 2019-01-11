@@ -73,12 +73,12 @@ class Parser_Run3(Parser):
             tuple_line["grade"] = tokens[17].strip()
             tuple_line["testDuration"] = tokens[19].strip()
         elif(event=="SURVEY"):
-                tuple_line["language"] = tokens[7].replace(",",";")
+                tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
                 tuple_line["experience"] = tokens[9]
                 tuple_line["gender"] = tokens[11].replace(" ", "_")
                 tuple_line["learned"] = tokens[13].replace(",",";")
                 tuple_line["years_programming"] = tokens[15]
-                tuple_line["country"] = tokens[17]
+                tuple_line["country"] = self.quote + tokens[17] + self.quote
                 tuple_line["age"] = tokens[19]
         elif(event=="FEEDBACK"):
                 tuple_line["feedback"] = self.quote + tokens[7].replace(",",";") + self.quote

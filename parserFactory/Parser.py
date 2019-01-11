@@ -103,7 +103,7 @@ class Parser_Run3(Parser):
             tuple_line["session_id"] = tokens[7]
             tuple_line["microtask_id"] = tokens[9]
             tuple_line["question_type"] = tokens[11]
-            tuple_line["question"] = tokens[13].replace(",",";")
+            tuple_line["question"] = self.quote + tokens[13].replace(",",";").replace("\"","'") + self.quote
             tuple_line["answer"] = tokens[15].replace(",",";")
             tuple_line["duration"] = tokens[17]
             index = line.find("explanation%") + "explanation%".__len__()

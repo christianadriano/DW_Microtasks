@@ -19,6 +19,7 @@ class Parser:
         self.suffix = worker_id_suffix
         self.separator1 = separator1
         self.separator2 = separator2
+        self.quote = "\""
                
     def parse_consent_line_to_dictionary(self,line):
         pass
@@ -237,7 +238,7 @@ class Parser_Run1(Parser):
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1].strip()
-            tuple_line["question"] = re.split(self.separator2,tokens[5])[1].replace(",",";")  
+            tuple_line["question"] = self.quote+re.split(self.separator2,tokens[5])[1].replace(",",";")+self.quote 
             tuple_line["answer"] = re.split(self.separator2,tokens[6])[1]
             tuple_line["duration"] =  re.split(self.separator2,tokens[7])[1]
             position = line.index("explanation=") + "explanation=".__len__()

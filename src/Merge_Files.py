@@ -199,7 +199,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE age NUMERIC",
                     "@ATTRIBUTE feedback STRING",
                     "@ATTRIBUTE quit_fileName STRING",
-                    "@ATTRIBUTE quit_reason {TOO DIFFICULT, TOO LONG, TOO BORING, OTHER}",
+                    "@ATTRIBUTE quit_reason {TOO_DIFFICULT, TOO_LONG, TOO_BORING, OTHER}",
                     "",
                     "@DATA",
                     ""

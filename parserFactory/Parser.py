@@ -144,7 +144,7 @@ class Parser_Run2(Parser):
             tuple_line["gender"] = tokens[9].replace(" ", "_")
             tuple_line["years_programming"] = tokens[11]
             tuple_line["difficulty"] = tokens[13]
-            tuple_line["country"] = tokens[15]
+            tuple_line["country"] = self.quote + tokens[15] + self.quote
             tuple_line["age"] = tokens[17]  
         return (tuple_line)       
      
@@ -210,7 +210,7 @@ class Parser_Run1(Parser):
             tcount += 1
             tuple_line["difficulty"] = re.split(self.separator2,tokens[tcount])[1] 
             tcount += 1
-            tuple_line["country"] = re.split(self.separator2,tokens[tcount])[1]  
+            tuple_line["country"] = self.quote + re.split(self.separator2,tokens[tcount])[1] + self.quote  
             tcount += 1
             tuple_line["age"] = re.split(self.separator2,tokens[tcount])[1]
         return (tuple_line)      

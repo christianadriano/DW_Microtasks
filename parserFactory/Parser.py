@@ -81,7 +81,7 @@ class Parser_Run3(Parser):
                 tuple_line["country"] = self.quote + tokens[17] + self.quote
                 tuple_line["age"] = tokens[19]
         elif(event=="FEEDBACK"):
-                tuple_line["feedback"] = self.quote + tokens[7].replace(",",";") + self.quote
+                tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
         elif(event=="QUIT"):
                 tuple_line["quit_fileName"] = tokens[5]
                 tuple_line["quit_reason"] = tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_")
@@ -140,7 +140,7 @@ class Parser_Run2(Parser):
             tuple_line["grade"] = tokens[13].strip()
             tuple_line["testDuration"] = tokens[15].strip()
         elif(event=="SURVEY"):
-            tuple_line["feedback"] = self.quote + tokens[7].replace(",",";") + self.quote
+            tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
             tuple_line["gender"] = tokens[9].replace(" ", "_")
             tuple_line["years_programming"] = tokens[11]
             tuple_line["difficulty"] = tokens[13]
@@ -162,7 +162,7 @@ class Parser_Run2(Parser):
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = tokens[7]
             tuple_line["file_name"] = tokens[9].strip()
-            tuple_line["question"] = self.quote + tokens[11].replace(",",";") + self.quote
+            tuple_line["question"] = self.quote + tokens[11].replace(",",";").replace("\"","\'")  + self.quote
             tuple_line["answer"] = tokens[13]
             tuple_line["duration"] = tokens[15]
             index = line.find("explanation%") + "explanation%".__len__()
@@ -202,7 +202,7 @@ class Parser_Run1(Parser):
         elif(event=="SURVEY"):
             tcount = 3
             results = self.extract_feedback(tokens,3,"Gender=",self.separator2)
-            tuple_line["feedback"] = self.quote + results[0] + self.quote
+            tuple_line["feedback"] = self.quote + results[0].replace("\"","\'")  + self.quote
             tcount = results[1] + 1 
             tuple_line["gender"] = re.split(self.separator2,tokens[tcount])[1].replace(" ","_")
             tcount += 1

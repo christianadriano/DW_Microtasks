@@ -93,7 +93,7 @@ class Parser_Run3(Parser):
         tuple_line = []
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:28]
+        time_stamp = self.quote + time_stamp_event[:28] + self.quote
         event = tokens[1]
         if(event=="MICROTASK"):#Ignore other events
             tuple_line = {"time_stamp":time_stamp}
@@ -103,11 +103,11 @@ class Parser_Run3(Parser):
             tuple_line["session_id"] = tokens[7]
             tuple_line["microtask_id"] = tokens[9]
             tuple_line["question_type"] = tokens[11]
-            tuple_line["question"] = self.quote + tokens[13].replace(",",";").replace("\"","'") + self.quote
-            tuple_line["answer"] = tokens[15].replace(",",";").replace(" ","_")
+            tuple_line["question"] = self.quote + tokens[13].replace(",",";").replace("\"","\'") + self.quote
+            tuple_line["answer"] = tokens[15].replace(",","").replace(" ","_")
             tuple_line["duration"] = tokens[17]
             index = line.find("explanation%") + "explanation%".__len__()
-            tuple_line["explanation"] = line[index:].replace(",",";").replace("\"","\'")          
+            tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\"","\'") + self.quote          
         return (tuple_line) 
  
 class Parser_Run2(Parser):
@@ -163,7 +163,7 @@ class Parser_Run2(Parser):
             tuple_line["microtask_id"] = tokens[7]
             tuple_line["file_name"] = tokens[9].strip()
             tuple_line["question"] = self.quote + tokens[11].replace(",",";").replace("\"","\'")  + self.quote
-            tuple_line["answer"] = tokens[13]
+            tuple_line["answer"] = tokens[13].replace(";","_").replace("n\'t","_not_")
             tuple_line["duration"] = tokens[15]
             index = line.find("explanation%") + "explanation%".__len__()
             tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\"","\'") + self.quote          
@@ -238,7 +238,7 @@ class Parser_Run1(Parser):
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1].strip()
-            tuple_line["question"] = self.quote + re.split(self.separator2,tokens[5])[1].replace(",",";") + self.quote 
+            tuple_line["question"] = self.quote + re.split(self.separator2,tokens[5])[1].replace(",",";").replace("\"","\'") + self.quote 
             tuple_line["answer"] = re.split(self.separator2,tokens[6])[1]
             tuple_line["duration"] =  re.split(self.separator2,tokens[7])[1]
             position = line.index("explanation=") + "explanation=".__len__()

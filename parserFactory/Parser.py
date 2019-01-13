@@ -64,6 +64,14 @@ class Parser_Run3(Parser):
 
         if(event=="CONSENT"):
             tuple_line["consent_date"] = tokens[7].strip()
+        elif(event=="SURVEY"):
+            tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
+            tuple_line["experience"] = tokens[9]
+            tuple_line["gender"] = tokens[11].replace(" ", "_")
+            tuple_line["learned"] = self.quote + tokens[13].replace(",",";").replace(" ", "_") + self.quote
+            tuple_line["years_programming"] = tokens[15]
+            tuple_line["country"] = self.quote + tokens[17] + self.quote
+            tuple_line["age"] = tokens[19]
         elif(event=="SKILLTEST"):
             tuple_line["test1"] = tokens[7].strip()
             tuple_line["test2"] = tokens[9].strip()
@@ -72,14 +80,6 @@ class Parser_Run3(Parser):
             tuple_line["test5"] = tokens[15].strip()
             tuple_line["grade"] = tokens[17].strip()
             tuple_line["testDuration"] = tokens[19].strip()
-        elif(event=="SURVEY"):
-                tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
-                tuple_line["experience"] = tokens[9]
-                tuple_line["gender"] = tokens[11].replace(" ", "_")
-                tuple_line["learned"] = tokens[13].replace(",",";").replace(" ", "_")
-                tuple_line["years_programming"] = tokens[15]
-                tuple_line["country"] = self.quote + tokens[17] + self.quote
-                tuple_line["age"] = tokens[19]
         elif(event=="FEEDBACK"):
                 tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
         elif(event=="QUIT"):
@@ -104,8 +104,10 @@ class Parser_Run3(Parser):
             tuple_line["microtask_id"] = tokens[9]
             tuple_line["question_type"] = tokens[11]
             tuple_line["question"] = self.quote + tokens[13].replace(",",";").replace("\"","\'") + self.quote
-            tuple_line["answer"] = tokens[15].replace(",","").replace(" ","_")
-            tuple_line["duration"] = tokens[17]
+            tuple_line["answer"] = tokens[15].replace(",","").replace(" ","_").replace("N\'T","_NOT")
+            tuple_line["confidence"] = tokens[17]
+            tuple_line["difficulty"] = tokens[19]
+            tuple_line["duration"] = tokens[21]
             index = line.find("explanation%") + "explanation%".__len__()
             tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\"","\'") + self.quote          
         return (tuple_line) 

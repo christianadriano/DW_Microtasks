@@ -184,7 +184,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE explanation STRING",
                     "@ATTRIBUTE consent_date NUMERIC",
                     "@ATTRIBUTE language STRING",
-                    "@ATTRIBUTE experience {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other}",
+                    "@ATTRIBUTE experience String",
                     "@ATTRIBUTE gender {Female,Male,Prefer_not_to_tell}",
                     "@ATTRIBUTE learned STRING",
                     "@ATTRIBUTE years_programming NUMERIC",
@@ -205,6 +205,8 @@ class Merger_2(Merge_Files):
                     ""
                     ]
         return header_lines     
+
+#experience {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other}"
 
 class Merger_1(Merge_Files):
     '''

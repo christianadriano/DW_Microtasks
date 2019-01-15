@@ -66,7 +66,7 @@ class Parser_Run3(Parser):
             tuple_line["consent_date"] = tokens[7].strip()
         elif(event=="SURVEY"):
             tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
-            tuple_line["experience"] = tokens[9]
+            tuple_line["experience"] = self.quote + tokens[9] + self.quote
             tuple_line["gender"] = tokens[11].replace(" ", "_")
             tuple_line["learned"] = self.quote + tokens[13].replace(",",";").replace(" ", "_") + self.quote
             tuple_line["years_programming"] = tokens[15]

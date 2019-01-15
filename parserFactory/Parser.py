@@ -84,7 +84,7 @@ class Parser_Run3(Parser):
                 tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
         elif(event=="QUIT"):
                 tuple_line["quit_fileName"] = tokens[5]
-                tuple_line["quit_reason"] = tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_")
+                tuple_line["quit_reason"] = self.quote + tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_") + self.quote
         return (tuple_line)       
      
     

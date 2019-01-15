@@ -199,7 +199,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE testDuration NUMERIC",
                     "@ATTRIBUTE feedback STRING",
                     "@ATTRIBUTE quit_fileName STRING",
-                    "@ATTRIBUTE quit_reason {TOO_DIFFICULT, TOO_LONG, TOO_BORING, OTHER}",
+                    "@ATTRIBUTE quit_reason STRING",
                     "",
                     "@DATA",
                     ""
@@ -207,6 +207,7 @@ class Merger_2(Merge_Files):
         return header_lines     
 
 #experience {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other}"
+#quit_reason {TOO_DIFFICULT, TOO_LONG, TOO_BORING, OTHER}",
 
 class Merger_1(Merge_Files):
     '''

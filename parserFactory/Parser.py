@@ -109,7 +109,7 @@ class Parser_Run3(Parser):
             tuple_line["difficulty"] = tokens[19]
             tuple_line["duration"] = tokens[21]
             index = line.find("explanation%") + "explanation%".__len__()
-            tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\"","\'") + self.quote          
+            tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\""," ").replace("\'"," ") + self.quote          
         return (tuple_line) 
  
 class Parser_Run2(Parser):

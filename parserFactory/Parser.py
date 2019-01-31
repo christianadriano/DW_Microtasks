@@ -184,6 +184,11 @@ class Parser_Run1(Parser):
         '''
         super().__init__(suffix,separator1,separator2)
         
+        '''Dictionary is workerID:sessionID : last number of answer added
+        This is used to populate the field that tells the order of the answers (answerOrder)
+        '''
+        self.answerIndex_map = {"0:0",1} 
+        
     def parse_consent_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
         tokens = re.split(self.separator1,line)    

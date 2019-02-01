@@ -56,6 +56,8 @@ class Parser_Run3(Parser):
         Constructor
         '''
         super().__init__(suffix,separator1,separator2)
+        self.answerIndex_map = {"0:0":1} 
+
      
     def parse_consent_line_to_dictionary(self,line):
         '''
@@ -112,6 +114,8 @@ class Parser_Run3(Parser):
             tuple_line["question_type"] = tokens[11]
             tuple_line["question"] = self.quote + tokens[13].replace(",",";").replace("\"","\'") + self.quote
             tuple_line["answer"] = tokens[15].replace(",","").replace(" ","_").replace("N\'T","_NOT")
+            self.answerIndex_map = super().increment_answerCount(self.answerIndex_map, tuple_line["session_id"], tuple_line["worker_id"])
+            tuple_line["answer_index"] = self.answerIndex_map[tuple_line["session_id"] +"_"+ tuple_line["worker_id"]]
             tuple_line["confidence"] = tokens[17]
             tuple_line["difficulty"] = tokens[19]
             tuple_line["duration"] = tokens[21]

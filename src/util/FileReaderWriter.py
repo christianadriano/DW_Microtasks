@@ -28,7 +28,7 @@ class FileReaderWriter(object):
         list_values = list(tuple_dictionary.values())
         str_accum=''
         for item in list_values:
-            str_accum = str_accum + "," + item
+            str_accum = str_accum + "," + str(item)
         if(list_values.__len__()<tuple_size): #add values for missing fields
             top = tuple_size - list_values.__len__() 
             for i in range(0,top):

@@ -153,7 +153,7 @@ class Merger_2(Merge_Files):
                                     tuple_lines, 
                                     self.output+'consolidated_Final_Experiment_2.arff',
                                     self.get_header_arff(),
-                                    tuple_size=31
+                                    tuple_size=32
                                     )
 
 
@@ -178,6 +178,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE question_type {VARIABLE_DECLARATION,METHOD_INVOCATION,IF_CONDITIONAL,FOR_LOOP,WHILE_LOOP}",
                     "@ATTRIBUTE question STRING",
                     "@ATTRIBUTE answer {NO_THERE_IS_NOT_AN_ISSUE, I_DO_NOT_KNOW, YES_THERE_IS_AN_ISSUE}",
+                    "@ATTRIBUTE answer_index NUMERIC",
                     "@ATTRIBUTE confidence NUMERIC",
                     "@ATTRIBUTE difficulty NUMERIC",
                     "@ATTRIBUTE duration NUMERIC",

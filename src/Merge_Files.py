@@ -252,7 +252,7 @@ class Merger_1(Merge_Files):
 #                                       self.output+'consolidated_TEST_Run2.arff',
                                     self.output+'consolidated_Final_Experiment_1.arff',
                                     self.get_header_arff(),
-                                    tuple_size=23
+                                    tuple_size=24
                                     )
 
 # {11ByteArrayBuffer_buggy.java,8buggy_AbstractReviewSection_buggy.txt,1buggy_ApacheCamel.txt,9buggy_Hystrix_buggy.txt,13buggy_VectorClock_buggy.txt,10HashPropertyBuilder_buggy.java,3buggy_PatchSetContentRemoteFactory_buggy.txt,7buggy_ReviewTaskMapper_buggy.txt,6ReviewScopeNode_buggy.java,2SelectTranslator_buggy.java}
@@ -277,6 +277,7 @@ class Merger_1(Merge_Files):
                     "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE question STRING",
                     "@ATTRIBUTE answer {NO, PROBABLY_NOT, I_CANT_TELL, PROBABLY_YES, YES}",
+                    "@ATTRIBUTE answer_index NUMERIC",
                     "@ATTRIBUTE duration NUMERIC",
                     "@ATTRIBUTE explanation STRING",
                     "@ATTRIBUTE consent_date STRING",

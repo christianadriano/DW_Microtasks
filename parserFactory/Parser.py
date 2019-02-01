@@ -187,7 +187,7 @@ class Parser_Run1(Parser):
         '''Dictionary is workerID:sessionID : last number of answer added
         This is used to populate the field that tells the order of the answers (answerOrder)
         '''
-        self.answerIndex_map = {"0:0",1} 
+        self.answerIndex_map = {"0:0":1} 
         
     def parse_consent_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
@@ -250,5 +250,14 @@ class Parser_Run1(Parser):
             tuple_line["duration"] =  re.split(self.separator2,tokens[7])[1]
             position = line.index("explanation=") + "explanation=".__len__()
             tuple_line["explanation"] = self.quote + line[position:].replace(",",";").replace("\"","\'") + self.quote  
+            self.answerIndex_map = self.increment_answerCount(self.answerIndex_map, session_id,worker_id)
         return (tuple_line)
        
+    def increment_answerCount(self, countMap, session_id,worker_id):
+        counter = 1
+        key = session_id + worker_id
+        if(key in countMap.keys()):
+            counter = countMap[key]+1
+        countMap[key] = counter
+        return (countMap)
+    

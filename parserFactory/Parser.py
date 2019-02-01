@@ -245,17 +245,18 @@ class Parser_Run1(Parser):
             tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
             tuple_line["microtask_id"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1].strip()
-            tuple_line["question"] = self.quote + re.split(self.separator2,tokens[5])[1].replace(",",";").replace("\"","\'") + self.quote 
+            tuple_line["question"] = self.quote + re.split(self.separator2,tokens[5])[1].replace(",",";").replace("\"","\'") + self.quote
             tuple_line["answer"] = re.split(self.separator2,tokens[6])[1]
+            self.answerIndex_map = self.increment_answerCount(self.answerIndex_map, session_id,worker_id) 
+            tuple_line["answer_index"] = self.answerIndex_map[session_id +"_"+ worker_id]
             tuple_line["duration"] =  re.split(self.separator2,tokens[7])[1]
             position = line.index("explanation=") + "explanation=".__len__()
             tuple_line["explanation"] = self.quote + line[position:].replace(",",";").replace("\"","\'") + self.quote  
-            self.answerIndex_map = self.increment_answerCount(self.answerIndex_map, session_id,worker_id)
         return (tuple_line)
        
     def increment_answerCount(self, countMap, session_id,worker_id):
         counter = 1
-        key = session_id + worker_id
+        key = session_id +"_"+ worker_id
         if(key in countMap.keys()):
             counter = countMap[key]+1
         countMap[key] = counter

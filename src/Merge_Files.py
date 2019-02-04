@@ -319,7 +319,7 @@ class Merger_1(Merge_Files):
                             ":"+str(second)+"."+str(microsecond))
         
         length = len(tuple_lines)
-        tuple_lines[0]['time_stamp'] = dt_previous.strftime("%Y %m %d %H:%M:%S.%f")
+        tuple_lines[0]['time_stamp'] = "\"" +dt_previous.strftime("%Y %m %d %H:%M:%S.%f") +"\""
                         
         for i in range(1,length):
             dt = parse(tuple_lines[i]['time_stamp'])
@@ -335,7 +335,8 @@ class Merger_1(Merge_Files):
                             ":"+str(second)+"."+str(microsecond))
         
             dt_previous = dt #reset previous date
-            tuple_lines[i]['time_stamp'] = dt.strftime("%Y %m %d %H:%M:%S.%f")
+            tuple_lines[i]['time_stamp'] = "\"" +dt_previous.strftime("%Y %m %d %H:%M:%S.%f") +"\""
+
 
         return (tuple_lines)
     

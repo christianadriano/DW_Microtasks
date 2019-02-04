@@ -11,6 +11,8 @@ Processes SessionLog and ConsentLog Files for SECOND Run Experiment 1
 import re
 from util.FileReaderWriter import FileReaderWriter  
 from parserFactory import Parser
+from dateutil.parser import parse
+
 
 class Merge_Files:
     '''
@@ -242,6 +244,8 @@ class Merger_1(Merge_Files):
         
         tuple_lines = tuple_lines_1 + tuple_lines_2
         
+        tuple_lines = self.add_year_month_day(tuple_lines)
+        
 #         #Test files
 #         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData_2.txt",
 #                                 "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData2.txt",
@@ -298,7 +302,54 @@ class Merger_1(Merge_Files):
                     "@DATA",
                     ""
                     ]
-        return header_lines    
+        return header_lines   
+    
+    def add_year_month_day(self,tuple_lines):
+        '''
+        add the information about the year, month, and day of the experiment
+        to the time_stamp field
+        '''
+        '''
+        d_df_1 = pd.DataFrame(columns=['time_stamp', 'duration','date_formatted'])
+        d_df_1['time_stamp'] = self.df_1['time_stamp']
+        d_df_1['duration'] = self.df_1['duration']
+        d_df_1['date_formatted'] = self.df_1['time_stamp']
+        d_df_1['worker_id'] = self.df_1['worker_id']
+        '''           
+        first_dt = parse(tuple_lines[0]['time_stamp'])
+        current_day = 24 #experiment started on October 24, 2014
+        hour = first_dt.hour 
+        minute = first_dt.minute
+        second = first_dt.second
+        microsecond = first_dt.microsecond
+        dt_previous = parse("2014 10 24 "+str(hour)+":"+str(minute)+
+                            ":"+str(second)+"."+str(microsecond))
+        #print(dt_previous)
+        #print(dt_previous.strftime('%Y-%m-%d %H:%M:%S.%f'))
+        
+        length = len(tuple_lines)
+        tuple_lines[0]['time_stamp'] = dt_previous.strftime("%Y %m %d %H:%M:%S.%f")
+                        
+        for i in range(1,length):
+            dt = parse(tuple_lines[i]['time_stamp'])
+            hour = dt.hour
+            minute = dt.minute
+            second = dt.second
+            microsecond = dt.microsecond
+            #check if crossed the day (e.g., current hour smaller than previous hour)
+            if(dt.hour<dt_previous.hour):
+                current_day +=1
+                #dt_previous += datetime.timedelta(days=1)
+            dt = parse("2014 10 "+str(current_day)+" "+str(hour)+":"+str(minute)+
+                            ":"+str(second)+"."+str(microsecond))
+        
+            dt_previous = dt #reset previous date
+            tuple_lines[i]['time_stamp'] = dt.strftime("%Y %m %d %H:%M:%S.%f")
+            #date_formatted_list.append(str(dt.strftime("%Y %m %d %H:%M:%S.%f"))) #save new date
+        return (tuple_lines)
+        #update dataframe with new data formatter list
+        #tuple_line[0][i] = date_formatted_list
+        #d_df_1.update(temp_df)
     
 #CONTROLLER CODE
 

@@ -309,13 +309,6 @@ class Merger_1(Merge_Files):
         add the information about the year, month, and day of the experiment
         to the time_stamp field
         '''
-        '''
-        d_df_1 = pd.DataFrame(columns=['time_stamp', 'duration','date_formatted'])
-        d_df_1['time_stamp'] = self.df_1['time_stamp']
-        d_df_1['duration'] = self.df_1['duration']
-        d_df_1['date_formatted'] = self.df_1['time_stamp']
-        d_df_1['worker_id'] = self.df_1['worker_id']
-        '''           
         first_dt = parse(tuple_lines[0]['time_stamp'])
         current_day = 24 #experiment started on October 24, 2014
         hour = first_dt.hour 
@@ -324,8 +317,6 @@ class Merger_1(Merge_Files):
         microsecond = first_dt.microsecond
         dt_previous = parse("2014 10 24 "+str(hour)+":"+str(minute)+
                             ":"+str(second)+"."+str(microsecond))
-        #print(dt_previous)
-        #print(dt_previous.strftime('%Y-%m-%d %H:%M:%S.%f'))
         
         length = len(tuple_lines)
         tuple_lines[0]['time_stamp'] = dt_previous.strftime("%Y %m %d %H:%M:%S.%f")
@@ -345,11 +336,8 @@ class Merger_1(Merge_Files):
         
             dt_previous = dt #reset previous date
             tuple_lines[i]['time_stamp'] = dt.strftime("%Y %m %d %H:%M:%S.%f")
-            #date_formatted_list.append(str(dt.strftime("%Y %m %d %H:%M:%S.%f"))) #save new date
+
         return (tuple_lines)
-        #update dataframe with new data formatter list
-        #tuple_line[0][i] = date_formatted_list
-        #d_df_1.update(temp_df)
     
 #CONTROLLER CODE
 

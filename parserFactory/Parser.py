@@ -87,7 +87,7 @@ class Parser_Run3(Parser):
             tuple_line["test3"] = tokens[11].strip()
             tuple_line["test4"] = tokens[13].strip()
             tuple_line["test5"] = tokens[15].strip()
-            tuple_line["grade"] = tokens[17].strip()
+            tuple_line["qualification_score"] = tokens[17].strip()
             tuple_line["testDuration"] = tokens[19].strip()
         elif(event=="FEEDBACK"):
                 tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
@@ -152,7 +152,7 @@ class Parser_Run2(Parser):
             tuple_line["test2"] = tokens[7].strip()
             tuple_line["test3"] = tokens[9].strip()
             tuple_line["test4"] = tokens[11].strip()
-            tuple_line["grade"] = tokens[13].strip()
+            tuple_line["qualification_score"] = tokens[13].strip()
             tuple_line["testDuration"] = tokens[15].strip()
         elif(event=="SURVEY"):
             tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
@@ -219,7 +219,7 @@ class Parser_Run1(Parser):
             tuple_line["test2"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["test3"] = re.split(self.separator2,tokens[4])[1]
             tuple_line["test4"] = re.split(self.separator2,tokens[5])[1]
-            tuple_line["grade"] =  re.split(self.separator2,tokens[6])[1]
+            tuple_line["qualification_score"] =  re.split(self.separator2,tokens[6])[1]
             tuple_line["testDuration"] = (re.split(self.separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):
             tcount = 3

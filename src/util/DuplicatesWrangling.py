@@ -84,12 +84,16 @@ class DuplicatesWrangling(object):
                 final_tuples.append(line)
          
         return(final_tuples)
+
+    def test_duplicate_removal(self):
+        tuples = self.load_tuples()
+        duplicate_map = self.count_duplicates_E1(tuples) 
+        tuples = self.remove_duplicates(tuples,duplicate_map)
             
+        print("after duplicate removal = "+ str(len(tuples)))
+        ''' recounting to confirm removals ''' 
+        duplicate_map = self.count_duplicates_E1(tuples) 
+        print(duplicate_map)
+
 dup = DuplicatesWrangling()
-tuples = dup.load_tuples()
-duplicate_map = dup.count_duplicates_E1(tuples) 
-tuples = dup.remove_duplicates(tuples,duplicate_map)
-print("after duplicate removal = "+ str(len(tuples)))
-''' recounting to confirm removals ''' 
-duplicate_map = dup.count_duplicates_E1(tuples) 
-print(duplicate_map)
+dup.test_duplicate_removal()

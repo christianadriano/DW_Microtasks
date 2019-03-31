@@ -40,6 +40,7 @@ class DuplicatesWrangling(object):
         '''
         count_map = {"0:0:0":1} 
         duplicate_map = {"0:0:0":2}
+        i=0
         for line in tuples:
             worker_id = line["worker_id"]
             session_id = line["session_id"]
@@ -56,9 +57,39 @@ class DuplicatesWrangling(object):
                 count_map[key] = counter
 
             
-        print("Duplicated items:")
-        print(duplicate_map)    
+        #print("Duplicated items:")
+        #print(duplicate_map.keys())
+        #print(duplicate_map) 
+        return(duplicate_map)   
         
+    def remove_duplicates(self,tuples, duplicate_tuples):
+        
+        final_tuples = []
+        duplicate_keys = duplicate_tuples.keys()
+        for line in tuples:
+            worker_id = line["worker_id"]
+            session_id = line["session_id"]
+            microtask_id = line["microtask_id"]
+            key = microtask_id+"_"+session_id +"_"+ worker_id
+            if(key in duplicate_keys):
+                duplicate_counter = duplicate_tuples[key]
+                duplicate_counter = duplicate_counter-1
+                duplicate_tuples[key] = duplicate_counter
+                ''' Appends only the last occurrence of the duplicates'''
+                if(duplicate_counter==0): 
+                    final_tuples.append(line)
+                    duplicate_tuples.pop(key)
+            else:
+                ''' Appends any line that is not contained in the duplicate_keys'''
+                final_tuples.append(line)
+         
+        return(final_tuples)
+            
 dup = DuplicatesWrangling()
-dup.count_duplicates_E1(dup.load_tuples()) 
-        
+tuples = dup.load_tuples()
+duplicate_map = dup.count_duplicates_E1(tuples) 
+tuples = dup.remove_duplicates(tuples,duplicate_map)
+print("after duplicate removal = "+ str(len(tuples)))
+''' recounting to confirm removals ''' 
+duplicate_map = dup.count_duplicates_E1(tuples) 
+print(duplicate_map)

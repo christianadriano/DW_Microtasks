@@ -31,6 +31,8 @@ class Merge_Files:
         session_file_lines = self.load_session_file_lines(session_file_name_path)
         worker_data = self.load_consent_file(consent_file_name_path, parser)
         tuple_lines = self.parse_all_to_dictionary(session_file_lines, worker_data, parser)
+        duplicate_map = self.count_duplicates(tuple_lines)
+        tuple_lines = self.remove_duplicates(tuple_lines,duplicate_map)
         #print file_lines to file
         return (tuple_lines)
 
@@ -95,6 +97,57 @@ class Merge_Files:
         else:
             isNewTuple = False
         return isNewTuple
+    
+    def count_duplicates(self,tuples):
+        '''
+        The rule used is worker_id + session_id + microtask_id
+        '''
+        count_map = {"0:0:0":1} 
+        duplicate_map = {"0:0:0":2}
+        i=0
+        for line in tuples:
+            worker_id = line["worker_id"]
+            session_id = line["session_id"]
+            microtask_id = line["microtask_id"]
+            
+            counter = 1
+            key = microtask_id+"_"+session_id +"_"+ worker_id
+            if(key in count_map.keys()):
+                counter = count_map[key]+1
+                count_map[key] = counter
+                if(counter>1):
+                    duplicate_map[key] = counter
+            else:
+                count_map[key] = counter
+
+            
+        #print("Duplicated items:")
+        #print(duplicate_map.keys())
+        #print(duplicate_map) 
+        return(duplicate_map)   
+    
+    def remove_duplicates(self,tuples, duplicate_tuples):
+        
+        final_tuples = []
+        duplicate_keys = duplicate_tuples.keys()
+        for line in tuples:
+            worker_id = line["worker_id"]
+            session_id = line["session_id"]
+            microtask_id = line["microtask_id"]
+            key = microtask_id+"_"+session_id +"_"+ worker_id
+            if(key in duplicate_keys):
+                duplicate_counter = duplicate_tuples[key]
+                duplicate_counter = duplicate_counter-1
+                duplicate_tuples[key] = duplicate_counter
+                ''' Appends only the last occurrence of the duplicates'''
+                if(duplicate_counter==0): 
+                    final_tuples.append(line)
+                    duplicate_tuples.pop(key)
+            else:
+                ''' Appends any line that is not contained in the duplicate_keys'''
+                final_tuples.append(line)
+         
+        return(final_tuples)
    
     def parse_all_to_dictionary(self,file_lines,worker_data,parser):
         """parse all lines into dictionary tuples, return a list of these tuples"""

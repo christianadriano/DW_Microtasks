@@ -84,6 +84,15 @@ class DuplicatesWrangling(object):
                 final_tuples.append(line)
          
         return(final_tuples)
+    
+    def process_duplicates(self, tuples):
+        '''
+        identifies and counts the duplicate items
+        remove them returning a new tuple list without duplicates
+        '''
+        duplicate_tuples = self.count_duplicates_E1(tuples)
+        processed_tuples = self.remove_duplicates(tuples, duplicate_tuples) 
+        return (processed_tuples)
 
     def test_duplicate_removal(self):
         tuples = self.load_tuples()

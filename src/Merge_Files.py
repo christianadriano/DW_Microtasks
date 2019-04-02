@@ -33,6 +33,7 @@ class Merge_Files:
         tuple_lines = self.parse_all_to_dictionary(session_file_lines, worker_data, parser)
         duplicate_map = self.count_duplicates(tuple_lines)
         tuple_lines = self.remove_duplicates(tuple_lines,duplicate_map)
+        tuple_lines = self.compute_answer_index(tuple_lines)
         #print file_lines to file
         return (tuple_lines)
 
@@ -147,6 +148,24 @@ class Merge_Files:
                 ''' Appends any line that is not contained in the duplicate_keys'''
                 final_tuples.append(line)
          
+        return(final_tuples)
+   
+    def increment_answerCount(self,countMap, session_id,worker_id):
+        counter = 1
+        key = session_id +"_"+ worker_id
+        if(key in countMap.keys()):
+            counter = countMap[key]+1
+        countMap[key] = counter
+        return (countMap)
+   
+    def compute_answer_index(self,tuples):
+        answerIndex_map = {"0:0":1} 
+        final_tuples =[]
+        for line in tuples:
+            key = line["session_id"] +"_"+  line["worker_id"]
+            answerIndex_map = self.increment_answerCount(answerIndex_map, line["session_id"], line["worker_id"])
+            line["answer_index"] = answerIndex_map[key]
+            final_tuples.append(line)
         return(final_tuples)
    
     def parse_all_to_dictionary(self,file_lines,worker_data,parser):

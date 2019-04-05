@@ -69,7 +69,7 @@ class Parser_Run3(Parser):
             return []
         worker_ID = tokens[3]+"_"+self.suffix
         tuple_line={"worker_id":worker_ID} #need this to find index the tuple
-        tuple_line["file_name"] = tokens[5].strip()
+        #tuple_line["file_name"] = tokens[5].strip() (do not need this info)
 
         if(event=="CONSENT"):
             tuple_line["consent_date"] = tokens[7].strip()

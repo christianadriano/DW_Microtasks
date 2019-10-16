@@ -8,7 +8,7 @@ There are four metrics: LOC, Cyclomatic complexity, Size Char, Halstead Length, 
 
 @author: Christian
 '''
-
+from scipy.io import arff
 import pandas as pd
 
 class Merge_Task_ComplexityMetrics(object):
@@ -21,7 +21,9 @@ class Merge_Task_ComplexityMetrics(object):
         Load task outcomes file into a dataframe
         '''
         
-        pd.read_csv(self.root)
+        array_tasks_E2=pd.arff.loadarff(self.file_tasks_E2)
+        df_tasks_E2 = pd.DataFrame(array_tasks_E2[0])
+        df_complexity = pd.read_csv(self.file_tasks_E2)
 
     def _append_metrics_E2(self):
         '''
@@ -40,8 +42,13 @@ class Merge_Task_ComplexityMetrics(object):
         Initialize folders 
         '''
         super().__init__()
-        self.file_root = 'C://Users//Christian//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-2_2015//'
-        self.file_output ='C://Users//Christian//Documents//GitHub//DW_Microtasks//output//'
+        self.file_root ='C://Users//Christian//Documents//GitHub//DW_Microtasks//output//'
+        self.file_tasks_E2 = file_root + 'consolidated_Final_Experiment_2.arff'
+        self.file_tasks_E1 = file_root + 'consolidated_Final_Experiment_1.arff'
+        self.file_complexity_E2 = file_root + ''
+        self.file_complexity_E1 =''
+        
+        
         '''self.file_testInput = 'C://Users//Christian//Documents//GitHub//DW_Microtasks//test//'        
         
         

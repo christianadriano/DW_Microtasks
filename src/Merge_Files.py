@@ -105,7 +105,6 @@ class Merge_Files:
         '''
         count_map = {"0:0:0":1} 
         duplicate_map = {"0:0:0":2}
-        i=0
         for line in tuples:
             worker_id = line["worker_id"]
             session_id = line["session_id"]

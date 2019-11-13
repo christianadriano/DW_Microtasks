@@ -9,20 +9,17 @@ Provide appropriate ARFF headers for both files.
 
 @author: Christian
 '''
-from Merge_Files import Merger_1
-
 import re
 from util.FileReaderWriter import FileReaderWriter
 from util.Date_Stamp_1 import Date_Stamp_1
 from parserFactory import Parser
-from dateutil.parser import parse
 
 class Process_Consent:
     '''
     classdocs
     '''
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Initialize folders (see sub-classes)
         '''
@@ -31,18 +28,18 @@ class Process_Consent:
         """ coordinate the loading, Cleaning, Formating, and Writing of Consent File"""
         #Load file into a dictionary 
         consent_dictionary = self.load_consent_file(consent_file_name_path, parser)
-        duplicate_map = self.count_duplicates(consent_dictionary)
-        consent_dictionary = self.remove_duplicates(consent_dictionary,duplicate_map)
-        consent_dictionary = self.compute_answer_index(consent_dictionary)
+        #duplicate_map = self.count_duplicates(consent_dictionary)
+        #consent_dictionary = self.remove_duplicates(consent_dictionary,duplicate_map)
+        #consent_dictionary = self.compute_answer_index(consent_dictionary)
         #print file_lines to file
         return (consent_dictionary)
     
     @staticmethod
-    def merger_factory(experiment):
+    def process_factory(experiment_id):
         '''
         instantiates the appropriate instance of merger for the experiment number
         '''
-        if(experiment=="1"):
+        if(experiment_id=="1"):
             return(Process_Consent_1())
         else:
             return(Process_Consent_1()) #TODO substitute for consent_2
@@ -50,21 +47,21 @@ class Process_Consent:
     def load_consent_file(self,consent_file_path,parser):
         """Load all the data from each worker on a dictionary that can be queried later on"""    
         """for each worker_id, keeps the data about consent, skill test, and survey"""
-        consent_dictionnary = {} 
+        consent_dictionary = {} 
         consent_file_lines = self.load_file(consent_file_path)
         consent_file_lines = self.consolidate_broken_lines(consent_file_lines) 
         for line in consent_file_lines:
             parsed_line = parser.parse_consent_line_to_dictionary(line) 
             if(parsed_line.__len__()>0): #There are lines that should not be processed, such as ERROR because they don't have a worker ID
                 key = parsed_line["worker_id"]
-                if(key in consent_dictionnary):
-                    existing_dictionary = consent_dictionnary[key]  
+                if(key in consent_dictionary):
+                    existing_dictionary = consent_dictionary[key]  
                     existing_dictionary.update(parsed_line)
-                    consent_dictionnary[key] = existing_dictionary
+                    consent_dictionary[key] = existing_dictionary
                     #del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 else:
-                    consent_dictionnary[key] = parsed_line        
-        return(consent_dictionnary)
+                    consent_dictionary[key] = parsed_line        
+        return(consent_dictionary)
 
     def load_file(self,file_path):
         """Read a file and writes the content in a list of dictionaries [{lineNuber:LineContent}]"""
@@ -91,29 +88,46 @@ class Process_Consent:
                 processed_lines.append(line.strip("\n"))
                 i=i+1
         return processed_lines
+    
+    def match_start_tuple(self,line):
+        '''
+        Tests if the line has the timestamp string, which means that the line is the 
+        first data
+        '''
+        isNewTuple = False
+        if(re.search(r'[0-9][0-9]:[0-9][0-9]:[0-9][0-9]',line)):
+            isNewTuple = True
+        else:
+            isNewTuple = False
+        return isNewTuple
 
-    def remove_duplicates(self,tuples, duplicate_tuples):
-        
-        final_tuples = []
-        duplicate_keys = duplicate_tuples.keys()
+    def count_duplicates(self,tuples):
+        '''
+        The rule used is worker_id + session_id + microtask_id
+        '''
+        count_map = {"0:0:0":1} 
+        duplicate_map = {"0:0:0":2}
         for line in tuples:
             worker_id = line["worker_id"]
-            session_id = line["session_id"]
-            microtask_id = line["microtask_id"]
+            if(self.experiment==2):
+                session_id = line["session_id"]
+                microtask_id = line["microtask_id"]
+            
+            counter = 1
             key = microtask_id+"_"+session_id +"_"+ worker_id
-            if(key in duplicate_keys):
-                duplicate_counter = duplicate_tuples[key]
-                duplicate_counter = duplicate_counter-1
-                duplicate_tuples[key] = duplicate_counter
-                ''' Appends only the last occurrence of the duplicates'''
-                if(duplicate_counter==0): 
-                    final_tuples.append(line)
-                    duplicate_tuples.pop(key)
+            if(key in count_map.keys()):
+                counter = count_map[key]+1
+                count_map[key] = counter
+                if(counter>1):
+                    duplicate_map[key] = counter
             else:
-                ''' Appends any line that is not contained in the duplicate_keys'''
-                final_tuples.append(line)
-         
-        return(final_tuples)
+                count_map[key] = counter
+
+            
+        #print("Duplicated items:")
+        #print(duplicate_map.keys())
+        #print(duplicate_map) 
+        return(duplicate_map)   
     
     def remove_duplicates(self,tuples, duplicate_tuples):
         
@@ -121,8 +135,10 @@ class Process_Consent:
         duplicate_keys = duplicate_tuples.keys()
         for line in tuples:
             worker_id = line["worker_id"]
-            session_id = line["session_id"]
-            microtask_id = line["microtask_id"]
+            if(self.experiment_id==2):
+                session_id = line["session_id"]
+                microtask_id = line["microtask_id"]
+            
             key = microtask_id+"_"+session_id +"_"+ worker_id
             if(key in duplicate_keys):
                 duplicate_counter = duplicate_tuples[key]
@@ -145,6 +161,9 @@ class Process_Consent_1(Process_Consent):
     Process consent files for both runs of the experiment 1
     '''
     file_name = "Consent_Experiment_1"
+    
+    """Flag to identify the experiment"""
+    experiment_id = 1
     
     def __init__(self):
         '''
@@ -235,7 +254,7 @@ class Process_Consent_1(Process_Consent):
 #CONTROLLER CODE
 
 process_consent = Process_Consent()
-processor_1 = process_consent.process_factory(experiment="1")
+processor_1 = process_consent.process_factory(experiment_id="1")
 processor_1.process()
-processor_2 = process_consent.process_factory(experiment="2")
-processor_2.process()
+#processor_2 = process_consent.process_factory(experiment_id="2")
+#processor_2.process()

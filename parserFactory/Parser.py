@@ -142,9 +142,12 @@ class Parser_Run2(Parser):
         
         """parse the line into a dictionary"""
         tokens = re.split(self.separator1,line)    
-        event = tokens[1].strip()       
+        time_stamp_event = tokens[0]
+        time_stamp = time_stamp_event[:12] 
         worker_id = tokens[3].strip()+"_"+self.suffix
         tuple_line={"worker_id":worker_id} #need this to find index the tuple
+        tuple_line.update({"time_stamp":time_stamp})
+        event = tokens[1].strip()      
         if(event=="CONSENT"):
             tuple_line["consent_date"] = tokens[5].strip()
         elif(event=="SKILLTEST"):
@@ -211,6 +214,7 @@ class Parser_Run1(Parser):
         event = tokens[0].rsplit(self.separator2)[1].strip()
         worker_id = re.split(self.separator2,tokens[1])[1].strip()+"_"+self.suffix
         tuple_line={"worker_id":worker_id} #need this to find index the tuple
+        tuple_line.update({"time_stamp":time_stamp})
         if(event=="CONSENT"):
             tuple_line["consent_date"] = (re.split(self.separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):

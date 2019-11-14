@@ -80,9 +80,8 @@ class Merge_Files:
                 key = parsed_line["worker_id"]
                 if(key in consent_dictionnary):
                     existing_dictionary = consent_dictionnary[key]  
-                    existing_dictionary.update(parsed_line)
+                    existing_dictionary.update(parsed_line) ##append new data to the session data
                     consent_dictionnary[key] = existing_dictionary
-                    #del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 else:
                     consent_dictionnary[key] = parsed_line        
         return(consent_dictionnary)
@@ -176,7 +175,7 @@ class Merge_Files:
                 worker_id = newLine["worker_id"]
                 if(worker_id in worker_data):
                     worker_data_dictionary = worker_data[worker_id]
-                    newLine.update(worker_data_dictionary)
+                    newLine.update(worker_data_dictionary) ##append worker data to the session data
                 parsed_lines.append(newLine)
         return parsed_lines
     

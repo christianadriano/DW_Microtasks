@@ -64,19 +64,21 @@ class Parser_Run3(Parser):
         Parses the line into a dictionary
         '''
         tokens = re.split(self.separator1,line)
-        time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12] 
-        tuple_line = {"time_stamp":time_stamp}    
+        tuple_line={}
+               
         worker_ID = tokens[3]+"_"+self.suffix
         tuple_line.update({"worker_id":worker_ID}) #need this to find index the tuple
         event = tokens[1].strip()
         if(event=="ERROR"):
             return []
         #tuple_line["file_name"] = tokens[5].strip() (do not need this info)
-        tuple_line.update({"EVENT":event})#note that this will be overwritten when merging with MICROTASK event      
+        tuple_line.update({"event":event})#note that this will be overwritten when merging with MICROTASK event      
 
         if(event=="CONSENT"):
-            tuple_line["consent_date"] = tokens[7].strip()
+            time_stamp_event = tokens[0]
+            time_stamp = time_stamp_event[:12] 
+            tuple_line = {"time_stamp":time_stamp}    
+            tuple_line["consent_date"] = tokens[7].strip()         
         elif(event=="SURVEY"):
             tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
             tuple_line["experience"] = self.quote + tokens[9] + self.quote
@@ -145,16 +147,19 @@ class Parser_Run2(Parser):
     def parse_consent_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
         tokens = re.split(self.separator1,line)    
-        time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12] 
-        tuple_line={"time_stamp":time_stamp}
+        tuple_line = {}
         worker_id = tokens[3].strip()+"_"+self.suffix
-        tuple_line.update({"worker_id":worker_id}) #need this to find index the tuple    
         event = tokens[1].strip()
-        tuple_line.update({"EVENT":event})#note that this will be overwritten when merging with MICROTASK event      
         if(event=="CONSENT"):
+            time_stamp_event = tokens[0]
+            time_stamp = time_stamp_event[:12] 
+            tuple_line["time_stamp"] = time_stamp
             tuple_line["consent_date"] = tokens[5].strip()
+            tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"]= worker_id #need this to find index the tuple    
         elif(event=="SKILLTEST"):
+            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"]= worker_id #need this to find index the tuple    
             tuple_line["test1"] = tokens[5].strip()
             tuple_line["test2"] = tokens[7].strip()
             tuple_line["test3"] = tokens[9].strip()
@@ -162,6 +167,8 @@ class Parser_Run2(Parser):
             tuple_line["qualification_score"] = tokens[13].strip()
             tuple_line["testDuration"] = tokens[15].strip()
         elif(event=="SURVEY"):
+            tuple_line["event"] = event    
+            tuple_line["worker_id"]= worker_id #need this to find index the tuple
             tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
             tuple_line["gender"] = tokens[9].replace(" ", "_")
             tuple_line["years_programming"] = tokens[11]
@@ -213,16 +220,19 @@ class Parser_Run1(Parser):
     def parse_consent_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
         tokens = re.split(self.separator1,line)    
-        time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12]
-        tuple_line={"time_stamp":time_stamp}
+        tuple_line = {}
         worker_id = re.split(self.separator2,tokens[1])[1].strip()+"_"+self.suffix
-        tuple_line.update({"worker_id":worker_id}) #need this to find index the tuple
         event = tokens[0].rsplit(self.separator2)[1].strip()
-        tuple_line.update({"EVENT":event})#note that this will be overwritten when merging with MICROTASK event      
         if(event=="CONSENT"):
+            time_stamp_event = tokens[0]
+            time_stamp = time_stamp_event[:12]
+            tuple_line.update({"time_stamp":time_stamp})
+            tuple_line["worker_id"] = worker_id
+            tuple_line["event"] = event
             tuple_line["consent_date"] = (re.split(self.separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
+            tuple_line["worker_id"] = worker_id
+            tuple_line["event"] = event
             tuple_line["test1"] = re.split(self.separator2,tokens[2])[1]
             tuple_line["test2"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["test3"] = re.split(self.separator2,tokens[4])[1]
@@ -230,6 +240,8 @@ class Parser_Run1(Parser):
             tuple_line["qualification_score"] =  re.split(self.separator2,tokens[6])[1]
             tuple_line["testDuration"] = (re.split(self.separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):
+            tuple_line["worker_id"] = worker_id
+            tuple_line["event"] = event
             tcount = 3
             results = self.extract_feedback(tokens,3,"Gender=",self.separator2)
             tuple_line["feedback"] = self.quote + results[0].replace("\"","\'")  + self.quote

@@ -27,12 +27,12 @@ class Process_Consent:
     def run(self,consent_file_name_path, parser):
         """ coordinate the loading, Cleaning, Formating, and Writing of Consent File"""
         #Load file into a dictionary 
-        consent_dictionary = self.load_consent_file(consent_file_name_path, parser)
+        consent_tuples = self.load_consent_file(consent_file_name_path, parser)
         #duplicate_map = self.count_duplicates(consent_dictionary)
         #consent_dictionary = self.remove_duplicates(consent_dictionary,duplicate_map)
         #consent_dictionary = self.compute_answer_index(consent_dictionary)
         #print file_lines to file
-        return (consent_dictionary)
+        return (consent_tuples)
     
     @staticmethod
     def process_factory(experiment_id):
@@ -45,22 +45,17 @@ class Process_Consent:
             return(Process_Consent_1()) #TODO substitute for consent_2
                   
     def load_consent_file(self,consent_file_path,parser):
-        """Load all the data from each worker on a dictionary that can be queried later on"""    
+        """Load all the data from each worker on a Array that can be queried later on"""    
         """for each worker_id, keeps the data about consent, skill test, and survey"""
-        consent_dictionary = {} 
+        consent_lines = [] 
         consent_file_lines = self.load_file(consent_file_path)
         consent_file_lines = self.consolidate_broken_lines(consent_file_lines) 
         for line in consent_file_lines:
             parsed_line = parser.parse_consent_line_to_dictionary(line) 
             if(parsed_line.__len__()>0): #There are lines that should not be processed, such as ERROR because they don't have a worker ID
-                key = parsed_line["worker_id"]
-                if(key in consent_dictionary):
-                    existing_dictionary = consent_dictionary[key]  
-                    existing_dictionary.update(parsed_line)
-                    consent_dictionary[key] = existing_dictionary
-                else:
-                    consent_dictionary[key] = parsed_line        
-        return(consent_dictionary)
+                consent_lines.append(parsed_line)
+                #print(parsed_line)
+        return(consent_lines)
 
     def load_file(self,file_path):
         """Read a file and writes the content in a list of dictionaries [{lineNuber:LineContent}]"""
@@ -221,8 +216,8 @@ class Process_Consent_1(Process_Consent):
                     "@RELATION Task",
                     "",
                     "@ATTRIBUTE time_stamp  STRING",
-                    "@ATTRIBUTE event  {CONSENT}",
                     "@ATTRIBUTE worker_id  STRING",
+                    "@ATTRIBUTE event  {CONSENT,SKILLTEST,SURVEY}",
                     "@ATTRIBUTE consent_date STRING",
                     "@ATTRIBUTE test1 {false, true}",
                     "@ATTRIBUTE test2 {false, true}",

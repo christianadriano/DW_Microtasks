@@ -58,7 +58,6 @@ class Process_Consent:
                     existing_dictionary = consent_dictionary[key]  
                     existing_dictionary.update(parsed_line)
                     consent_dictionary[key] = existing_dictionary
-                    #del parsed_line["worker_id"] #remove the worker_id key-value, because we already have
                 else:
                     consent_dictionary[key] = parsed_line        
         return(consent_dictionary)

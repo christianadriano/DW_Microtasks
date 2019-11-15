@@ -209,7 +209,7 @@ class Process_Consent_1(Process_Consent):
 #                                       self.output+'consolidated_TEST_Run2.arff',
                                     self.output+'consent_consolidated_Experiment_1.arff',
                                     self.get_header_arff(),
-                                    tuple_size=24
+                                    tuple_size=16
                                     )
 
     def get_header_arff(self):
@@ -226,7 +226,7 @@ class Process_Consent_1(Process_Consent):
                     "",
                     "@ATTRIBUTE time_stamp  STRING",
                     "@ATTRIBUTE worker_id  STRING",
-                    "@ATTRIBUTE event  {CONSENT}",
+                    "@ATTRIBUTE event  {CONSENT,SKILLTEST,SURVEY}",
                     "@ATTRIBUTE consent_date STRING",
                     "@ATTRIBUTE test1 {false, true}",
                     "@ATTRIBUTE test2 {false, true}",

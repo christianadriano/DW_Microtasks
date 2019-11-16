@@ -54,11 +54,13 @@ class Process_Consent:
         consent_file_lines = self.consolidate_broken_lines(consent_file_lines) 
         for line in consent_file_lines:
             parsed_line = parser.parse_consent_line_to_dictionary(line) 
+           
             if(parsed_line.__len__()>0 & ##There are lines that should not be processed, such as ERROR because they don't have a worker ID
                all(k in parsed_line.keys() for k in ("worker_id","event"))): #ignore experiment starting line, that has session=null
+              
                 key = parsed_line["worker_id"]
                 event = parsed_line["event"]
-                if(key in consent_dictionary and event!="CONSENT"):
+                if(key in consent_dictionary.keys() and event!="CONSENT"):
                     existing_dictionary = consent_dictionary[key]  
                     existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
                     consent_dictionary[key] = existing_dictionary
@@ -290,9 +292,8 @@ class Process_Consent_2(Process_Consent):
                     "@RELATION Task",
                     "",
                     "@ATTRIBUTE time_stamp STRING",
-                    "@ATTRIBUTE event  {MICROTASK}",
+                    "@ATTRIBUTE event  {CONSENT,SURVEY,SKILLTEST}",
                     "@ATTRIBUTE worker_id  STRING",
-                    "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE consent_date NUMERIC",
                     "@ATTRIBUTE language STRING",
                     "@ATTRIBUTE experience String",
@@ -301,6 +302,7 @@ class Process_Consent_2(Process_Consent):
                     "@ATTRIBUTE years_programming NUMERIC",
                     "@ATTRIBUTE country STRING",
                     "@ATTRIBUTE age NUMERIC",
+                    "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE test1 {false,true}",
                     "@ATTRIBUTE test2 {false,true}",
                     "@ATTRIBUTE test3 {false,true}",

@@ -18,7 +18,8 @@ class Process_Consent:
     '''
     classdocs
     '''
-
+    experiment_id = 0
+    
     def __init__(self):
         '''
         Initialize folders (see sub-classes)
@@ -41,6 +42,7 @@ class Process_Consent:
         '''
         instantiates the appropriate instance of merger for the experiment number
         '''
+        experiment_id = experiment_id
         if(experiment_id=="1"):
             return(Process_Consent_1())
         else:
@@ -55,17 +57,24 @@ class Process_Consent:
         for line in consent_file_lines:
             parsed_line = parser.parse_consent_line_to_dictionary(line) 
            
-            if(parsed_line.__len__()>0 & ##There are lines that should not be processed, such as ERROR because they don't have a worker ID
+            if(parsed_line.__len__()>0 and ##There are lines that should not be processed, such as ERROR because they don't have a worker ID
                all(k in parsed_line.keys() for k in ("worker_id","event"))): #ignore experiment starting line, that has session=null
-              
-                key = parsed_line["worker_id"]
+
+                worker_id = parsed_line["worker_id"]
                 event = parsed_line["event"]
-                if(key in consent_dictionary.keys() and event!="CONSENT"):
-                    existing_dictionary = consent_dictionary[key]  
-                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
-                    consent_dictionary[key] = existing_dictionary
+                
+                if(self.experiment_id ==2):
+                    key = worker_id +"_"+ parsed_line["file_name"] #because there are multiple entries in E2
                 else:
-                    consent_dictionary[key] = parsed_line  
+                    key = worker_id
+                    
+                if(key in consent_dictionary.keys() and event!="CONSENT"):
+                    #existing_dictionary = consent_dictionary[key]  
+                    #existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
+                    consent_dictionary[key].update(parsed_line) # = existing_dictionary
+                #elif(event=="CONSENT"): #First occurrence of consent for a worker_id (and file_name     
+                else:
+                   consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 
                 #print(parsed_line)
         return(consent_dictionary)
 
@@ -294,6 +303,7 @@ class Process_Consent_2(Process_Consent):
                     "@ATTRIBUTE time_stamp STRING",
                     "@ATTRIBUTE event  {CONSENT,SURVEY,SKILLTEST}",
                     "@ATTRIBUTE worker_id  STRING",
+                    "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE consent_date NUMERIC",
                     "@ATTRIBUTE language STRING",
                     "@ATTRIBUTE experience String",
@@ -302,7 +312,6 @@ class Process_Consent_2(Process_Consent):
                     "@ATTRIBUTE years_programming NUMERIC",
                     "@ATTRIBUTE country STRING",
                     "@ATTRIBUTE age NUMERIC",
-                    "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE test1 {false,true}",
                     "@ATTRIBUTE test2 {false,true}",
                     "@ATTRIBUTE test3 {false,true}",
@@ -311,7 +320,6 @@ class Process_Consent_2(Process_Consent):
                     "@ATTRIBUTE qualification_score NUMERIC",
                     "@ATTRIBUTE testDuration NUMERIC",
                     "@ATTRIBUTE feedback STRING",
-                    "@ATTRIBUTE quit_fileName STRING",
                     "@ATTRIBUTE quit_reason STRING",
                     "",
                     "@DATA",

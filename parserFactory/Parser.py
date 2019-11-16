@@ -64,22 +64,23 @@ class Parser_Run3(Parser):
         Parses the line into a dictionary
         '''
         tokens = re.split(self.separator1,line)
-        tuple_line={}
-               
-        worker_ID = tokens[3]+"_"+self.suffix
-        tuple_line.update({"worker_id":worker_ID}) #need this to find index the tuple
+
         event = tokens[1].strip()
         if(event=="ERROR"):
-            return []
-        #tuple_line["file_name"] = tokens[5].strip() (do not need this info)
-        tuple_line.update({"event":event})#note that this will be overwritten when merging with MICROTASK event      
-
+            return {}
+        
+        tuple_line = {}
+        worker_ID = tokens[3]+"_"+self.suffix
         if(event=="CONSENT"):
             time_stamp_event = tokens[0]
             time_stamp = time_stamp_event[:12] 
-            tuple_line = {"time_stamp":time_stamp}    
+            tuple_line["time_stamp"] = time_stamp
+            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
             tuple_line["consent_date"] = tokens[7].strip()         
         elif(event=="SURVEY"):
+            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
             tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
             tuple_line["experience"] = self.quote + tokens[9] + self.quote
             tuple_line["gender"] = tokens[11].replace(" ", "_")
@@ -88,6 +89,9 @@ class Parser_Run3(Parser):
             tuple_line["country"] = self.quote + tokens[17] + self.quote 
             tuple_line["age"] = tokens[19]
         elif(event=="SKILLTEST"):
+            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
+            tuple_line["file_name"] = tokens[5].strip() #need this to know which test version was executed
             tuple_line["test1"] = tokens[7].strip()
             tuple_line["test2"] = tokens[9].strip()
             tuple_line["test3"] = tokens[11].strip()
@@ -96,10 +100,14 @@ class Parser_Run3(Parser):
             tuple_line["qualification_score"] = tokens[17].strip()
             tuple_line["testDuration"] = tokens[19].strip()
         elif(event=="FEEDBACK"):
-                tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
+            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
+            tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
         elif(event=="QUIT"):
-                tuple_line["quit_fileName"] = tokens[5]
-                tuple_line["quit_reason"] = self.quote + tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_") + self.quote
+            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
+            tuple_line["quit_fileName"] = tokens[5]
+            tuple_line["quit_reason"] = self.quote + tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_") + self.quote
         return (tuple_line)       
      
     

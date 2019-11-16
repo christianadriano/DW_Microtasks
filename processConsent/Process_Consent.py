@@ -44,7 +44,7 @@ class Process_Consent:
         if(experiment_id=="1"):
             return(Process_Consent_1())
         else:
-            return(Process_Consent_1()) #TODO substitute for consent_2
+            return(Process_Consent_2()) #TODO substitute for consent_2
                   
     def load_consent_file(self,consent_file_path,parser):
         """Load all the data from each worker on a dictionary that can be queried later on"""    
@@ -54,7 +54,8 @@ class Process_Consent:
         consent_file_lines = self.consolidate_broken_lines(consent_file_lines) 
         for line in consent_file_lines:
             parsed_line = parser.parse_consent_line_to_dictionary(line) 
-            if(parsed_line.__len__()>0): #There are lines that should not be processed, such as ERROR because they don't have a worker ID
+            if(parsed_line.__len__()>0 & ##There are lines that should not be processed, such as ERROR because they don't have a worker ID
+               all(k in parsed_line.keys() for k in ("worker_id","event"))): #ignore experiment starting line, that has session=null
                 key = parsed_line["worker_id"]
                 event = parsed_line["event"]
                 if(key in consent_dictionary and event!="CONSENT"):
@@ -175,17 +176,12 @@ class Process_Consent_1(Process_Consent):
         super().__init__()
         self.root = 'C://Users//Christian//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-1_2014//'
         self.output ='C://Users//Christian//Documents//GitHub//DW_Microtasks//output//'
-        self.testInput = 'C://Users//Christian//Documents//GitHub//DW_Microtasks//test//'
-
-
-
 
     def process(self):
         """process the two files"""
         
         tuple_lines_1 = self.run(
                                self.root + "consent_Run1-Total-25oct.log",
-                               #self.testInput + "consentTestData.txt",
                                 Parser.Parser.factory_method(self,worker_id_suffix='1', separator1=";", separator2="=")
                                ) 
         
@@ -197,16 +193,10 @@ class Process_Consent_1(Process_Consent):
         tuple_lines = tuple_lines_1 + tuple_lines_2
         
         tuple_lines = self.add_year_month_day(tuple_lines)
-        
-#         #Test files
-#         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData_2.txt",
-#                                 "C://Users//Chris//Documents//GitHub//DW_Microtasks//test//consentTestData2.txt",
-#                                 suffix='2',separator="%") #file_name="session_Run1-Total-25oct.log",suffix='1')
-         
+                 
         """tuple_lines = tuple_lines + self.run("C://Users//Christian//Documents//GitHub//DW_Microtasks//test//testData_2.txt", suffix='2') #file_name="session_Run2-28oct.log", suffix='2')"""
         writer = FileReaderWriter()
         writer.write_session_log_arff(tuple_lines, 
-#                                       self.output+'consolidated_TEST_Run2.arff',
                                     self.output+'consent_consolidated_Experiment_1.arff',
                                     self.get_header_arff(),
                                     tuple_size=16
@@ -253,11 +243,88 @@ class Process_Consent_1(Process_Consent):
         '''
         return(Date_Stamp_1.add_year_month_day(self, tuple_lines))
      
+     
+class Process_Consent_2(Process_Consent):
+
+    '''
+    Process consent files the experiment 2
+    '''
+    file_name = "Consent_Experiment_2"
+    
+    """Flag to identify the experiment"""
+    experiment_id = 2
+    
+    def __init__(self):
+        '''
+        Initialize folders 
+        '''
+        super().__init__()
+        self.root = 'C://Users//Christian//Dropbox (Personal)//FaultLocalization_Microtasks_data//Experiment-2_2015//'
+        self.output ='C://Users//Christian//Documents//GitHub//DW_Microtasks//output//'
+    
+    def process(self):
+        """process the two files from experiment-2"""
+        tuple_lines = self.run(
+                                self.root + "consent-log_consolidated_final.txt",
+                                Parser.Parser.factory_method(self,worker_id_suffix='3', separator1="%", separator2="%")
+                               ) 
+        
+        writer = FileReaderWriter()
+        writer.write_session_log_arff(
+                                    tuple_lines, 
+                                    self.output+'consent_consolidated_Experiment_2.arff',
+                                    self.get_header_arff(),
+                                    tuple_size=22
+                                    )
+
+    def get_header_arff(self):
+        author ="Christian Medeiros Adriano"
+        date="July, 2015"
+        header_lines=["% 1. Title: Consent file from Experiment TWO",
+                    "%" ,
+                    "% 2. Sources:",
+                    "%      (a) Creator: Christian Medeiros Adriano",
+                    "%      (b) Date of Experiment: July, 2015",
+                    "%      (c) Paper draft = https://arxiv.org/abs/1612.03015",
+                    "%" ,
+                    "@RELATION Task",
+                    "",
+                    "@ATTRIBUTE time_stamp STRING",
+                    "@ATTRIBUTE event  {MICROTASK}",
+                    "@ATTRIBUTE worker_id  STRING",
+                    "@ATTRIBUTE file_name STRING",
+                    "@ATTRIBUTE consent_date NUMERIC",
+                    "@ATTRIBUTE language STRING",
+                    "@ATTRIBUTE experience String",
+                    "@ATTRIBUTE gender {Female,Male,Prefer_not_to_tell,Other}",
+                    "@ATTRIBUTE learned STRING",
+                    "@ATTRIBUTE years_programming NUMERIC",
+                    "@ATTRIBUTE country STRING",
+                    "@ATTRIBUTE age NUMERIC",
+                    "@ATTRIBUTE test1 {false,true}",
+                    "@ATTRIBUTE test2 {false,true}",
+                    "@ATTRIBUTE test3 {false,true}",
+                    "@ATTRIBUTE test4 {false,true}",
+                    "@ATTRIBUTE test5 {false,true}",
+                    "@ATTRIBUTE qualification_score NUMERIC",
+                    "@ATTRIBUTE testDuration NUMERIC",
+                    "@ATTRIBUTE feedback STRING",
+                    "@ATTRIBUTE quit_fileName STRING",
+                    "@ATTRIBUTE quit_reason STRING",
+                    "",
+                    "@DATA",
+                    ""
+                    ]
+        return header_lines     
+
+#experience {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other}"
+#quit_reason {TOO_DIFFICULT, TOO_LONG, TOO_BORING, OTHER}"
+
 #-------------------------------------------------------------------   
 #CONTROLLER CODE
 
 process_consent = Process_Consent()
-processor_1 = process_consent.process_factory(experiment_id="1")
-processor_1.process()
-#processor_2 = process_consent.process_factory(experiment_id="2")
-#processor_2.process()
+#processor_1 = process_consent.process_factory(experiment_id="1")
+#processor_1.process()
+processor_2 = process_consent.process_factory(experiment_id="2")
+processor_2.process()

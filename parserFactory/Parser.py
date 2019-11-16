@@ -69,18 +69,18 @@ class Parser_Run3(Parser):
         if(event=="ERROR"):
             return {}
         
-        tuple_line = {}
-        worker_ID = tokens[3]+"_"+self.suffix
+        tuple_line = initialize_empty_fields() #guarantees that fields are aligned, regardless of missing ones.
+        time_stamp_event = tokens[0]
+        time_stamp = time_stamp_event[:12] 
+        tuple_line["time_stamp"] = time_stamp
+        tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
+        tuple_line["worker_id"] = worker_ID = tokens[3]+"_"+self.suffix #need this to find index the tuple
+        tuple_line["file_name"] = tokens[5].strip() #need this to know which test version was executed 
+        tuple_line["consent_date"] =""
+        
         if(event=="CONSENT"):
-            time_stamp_event = tokens[0]
-            time_stamp = time_stamp_event[:12] 
-            tuple_line["time_stamp"] = time_stamp
-            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
             tuple_line["consent_date"] = tokens[7].strip()         
         elif(event=="SURVEY"):
-            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
             tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
             tuple_line["experience"] = self.quote + tokens[9] + self.quote
             tuple_line["gender"] = tokens[11].replace(" ", "_")
@@ -89,9 +89,6 @@ class Parser_Run3(Parser):
             tuple_line["country"] = self.quote + tokens[17] + self.quote 
             tuple_line["age"] = tokens[19]
         elif(event=="SKILLTEST"):
-            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
-            tuple_line["file_name"] = tokens[5].strip() #need this to know which test version was executed
             tuple_line["test1"] = tokens[7].strip()
             tuple_line["test2"] = tokens[9].strip()
             tuple_line["test3"] = tokens[11].strip()
@@ -100,16 +97,35 @@ class Parser_Run3(Parser):
             tuple_line["qualification_score"] = tokens[17].strip()
             tuple_line["testDuration"] = tokens[19].strip()
         elif(event=="FEEDBACK"):
-            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
             tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
         elif(event=="QUIT"):
-            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"] = worker_ID #need this to find index the tuple 
-            tuple_line["quit_fileName"] = tokens[5]
             tuple_line["quit_reason"] = self.quote + tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_") + self.quote
         return (tuple_line)       
      
+    def initialize_empty_fields(self):
+        tuple_line={}
+        tuple_line["time_stamp"] = ""
+        tuple_line["event"] = ""     
+        tuple_line["worker_id"] = ""
+        tuple_line["file_name"] = ""
+        tuple_line["consent_date"] =""
+        tuple_line["language"] = ""
+        tuple_line["experience"] = ""
+        tuple_line["gender"] = ""
+        tuple_line["learned"] = ""  
+        tuple_line["years_programming"] = ""
+        tuple_line["country"] = ""
+        tuple_line["age"] = ""
+        tuple_line["test1"] =""
+        tuple_line["test2"] = ""
+        tuple_line["test3"] = ""
+        tuple_line["test4"] = ""
+        tuple_line["test5"] = ""
+        tuple_line["qualification_score"] = ""
+        tuple_line["testDuration"] = ""
+        tuple_line["feedback"] = ""
+        tuple_line["quit_reason"] = ""
+        return(tuple_line)
     
     def parse_session_line_to_dictionary(self,line):
         """parse the line into a dictionary"""

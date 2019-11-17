@@ -70,9 +70,8 @@ class Process_Consent:
                     
                 if(key in consent_dictionary.keys() and event!="CONSENT"):
                     existing_dictionary = consent_dictionary[key]  
-                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
-                    consent_dictionary[key] = existing_dictionary
-                #elif(event=="CONSENT"): #First occurrence of consent for a worker_id (and file_name     
+#                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
+                    consent_dictionary[key] = self.merge_dictionaries(parsed_line,existing_dictionary)
                 else:
                    consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 
                 #print(parsed_line)
@@ -115,6 +114,22 @@ class Process_Consent:
         else:
             isNewTuple = False
         return isNewTuple
+
+    def merge_dictionaries(self,dict_current,dict_new):
+        '''
+        Always take the non-empty value as the final value.
+        '''
+        dict_final = {}
+        keylist = dict_current.keys()
+        for key in keylist:
+            if(dict_current[key]==""):
+                dict_final[key]=dict_new[key]
+            else:
+                dict_final[key]=dict_current[key]
+        
+        dict_final["event"] = dict_new["event"]
+        return(dict_final)
+            
 
     def count_duplicates(self,tuples):
         '''
@@ -301,7 +316,7 @@ class Process_Consent_2(Process_Consent):
                     "@RELATION Task",
                     "",
                     "@ATTRIBUTE time_stamp STRING",
-                    "@ATTRIBUTE event  {CONSENT,SURVEY,SKILLTEST}",
+                    "@ATTRIBUTE event  {CONSENT,SURVEY,SKILLTEST,FEEDBACK}",
                     "@ATTRIBUTE worker_id  STRING",
                     "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE consent_date NUMERIC",

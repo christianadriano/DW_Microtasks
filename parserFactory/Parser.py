@@ -69,7 +69,7 @@ class Parser_Run3(Parser):
         if(event=="ERROR"):
             return {}
         
-        tuple_line = {} #self.initialize_empty_fields() #guarantees that fields are aligned, regardless of missing ones.
+        tuple_line = self.initialize_empty_fields() #guarantees that fields are aligned, regardless of missing ones.
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12] 
         tuple_line["time_stamp"] = time_stamp
@@ -78,7 +78,7 @@ class Parser_Run3(Parser):
         tuple_line["file_name"] = tokens[5].strip() #need this to know which test version was executed 
         
         if(event=="CONSENT"):
-            tuple_line["consent_date"] = tokens[7].strip()         
+            tuple_line["consent_date"] = tokens[7].strip()       
         elif(event=="SURVEY"):
             tuple_line["language"] = self.quote + tokens[7].replace(",",";") + self.quote
             tuple_line["experience"] = self.quote + tokens[9] + self.quote

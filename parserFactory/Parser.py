@@ -69,14 +69,13 @@ class Parser_Run3(Parser):
         if(event=="ERROR"):
             return {}
         
-        tuple_line = initialize_empty_fields() #guarantees that fields are aligned, regardless of missing ones.
+        tuple_line = {} #self.initialize_empty_fields() #guarantees that fields are aligned, regardless of missing ones.
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12] 
         tuple_line["time_stamp"] = time_stamp
-        tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-        tuple_line["worker_id"] = worker_ID = tokens[3]+"_"+self.suffix #need this to find index the tuple
+        tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
+        tuple_line["worker_id"] = tokens[3]+"_"+self.suffix #need this to find index the tuple
         tuple_line["file_name"] = tokens[5].strip() #need this to know which test version was executed 
-        tuple_line["consent_date"] =""
         
         if(event=="CONSENT"):
             tuple_line["consent_date"] = tokens[7].strip()         
@@ -102,7 +101,12 @@ class Parser_Run3(Parser):
             tuple_line["quit_reason"] = self.quote + tokens[7].replace(",",";").replace("THE TASK IS ","").replace(" ","_") + self.quote
         return (tuple_line)       
      
+     
     def initialize_empty_fields(self):
+        '''
+        Initialize consent log empty fields to guarantee that columns are aligned,
+         even when there is missing data
+        '''
         tuple_line={}
         tuple_line["time_stamp"] = ""
         tuple_line["event"] = ""     

@@ -69,9 +69,9 @@ class Process_Consent:
                     key = worker_id
                     
                 if(key in consent_dictionary.keys() and event!="CONSENT"):
-                    #existing_dictionary = consent_dictionary[key]  
-                    #existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
-                    consent_dictionary[key].update(parsed_line) # = existing_dictionary
+                    existing_dictionary = consent_dictionary[key]  
+                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
+                    consent_dictionary[key] = existing_dictionary
                 #elif(event=="CONSENT"): #First occurrence of consent for a worker_id (and file_name     
                 else:
                    consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 

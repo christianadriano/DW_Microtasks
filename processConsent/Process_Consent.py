@@ -300,7 +300,7 @@ class Process_Consent_2(Process_Consent):
                                     tuple_lines, 
                                     self.output+'consent_consolidated_Experiment_2.arff',
                                     self.get_header_arff(),
-                                    tuple_size=22
+                                    tuple_size=21
                                     )
 
     def get_header_arff(self):
@@ -349,7 +349,7 @@ class Process_Consent_2(Process_Consent):
 #CONTROLLER CODE
 
 process_consent = Process_Consent()
-#processor_1 = process_consent.process_factory(experiment_id="1")
-#processor_1.process()
-processor_2 = process_consent.process_factory(experiment_id="2")
-processor_2.process()
+processor_1 = process_consent.process_factory(experiment_id="1")
+processor_1.process()
+#processor_2 = process_consent.process_factory(experiment_id="2")
+#processor_2.process()

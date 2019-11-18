@@ -175,16 +175,16 @@ class Parser_Run2(Parser):
     def parse_consent_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
         tokens = re.split(self.separator1,line)    
-        tuple_line = {}
+        tuple_line = self.initialize_empty_fields()
         worker_id = tokens[3].strip()+"_"+self.suffix
         event = tokens[1].strip()
         if(event=="CONSENT"):
             time_stamp_event = tokens[0]
             time_stamp = time_stamp_event[:12] 
             tuple_line["time_stamp"] = time_stamp
-            tuple_line["consent_date"] = tokens[5].strip()
             tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
             tuple_line["worker_id"]= worker_id #need this to find index the tuple    
+            tuple_line["consent_date"] = tokens[5].strip()
         elif(event=="SKILLTEST"):
             tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
             tuple_line["worker_id"]= worker_id #need this to find index the tuple    
@@ -227,6 +227,30 @@ class Parser_Run2(Parser):
             tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\"","\'") + self.quote          
         return (tuple_line)
         
+    def initialize_empty_fields(self):
+        '''
+        Initialize consent log empty fields to guarantee that columns are aligned,
+         even when there is missing data
+        '''
+        tuple_line={"time_stamp": "",
+                    "event":"",     
+                    "worker_id":"",
+                    "consent_date":"",
+                    "test1":"",
+                    "test2":"",
+                    "test3":"",
+                    "test4":"",
+                    "qualification_score":"",
+                    "testDuration":"",
+                    "feedback":"",
+                    "gender":"",
+                    "years_programming":"",
+                    "difficulty":"",
+                    "country":"",
+                    "age":""
+        }
+        return(tuple_line)
+        
 class Parser_Run1(Parser):
     '''
     Parser for the run 1 of experiment 1
@@ -248,15 +272,15 @@ class Parser_Run1(Parser):
     def parse_consent_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
         tokens = re.split(self.separator1,line)    
-        tuple_line = {}
+        tuple_line = self.initialize_empty_fields()
         worker_id = re.split(self.separator2,tokens[1])[1].strip()+"_"+self.suffix
         event = tokens[0].rsplit(self.separator2)[1].strip()
         if(event=="CONSENT"):
             time_stamp_event = tokens[0]
             time_stamp = time_stamp_event[:12]
-            tuple_line.update({"time_stamp":time_stamp})
-            tuple_line["worker_id"] = worker_id
+            tuple_line["time_stamp"] = time_stamp
             tuple_line["event"] = event
+            tuple_line["worker_id"] = worker_id
             tuple_line["consent_date"] = (re.split(self.separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
             tuple_line["worker_id"] = worker_id
@@ -268,8 +292,8 @@ class Parser_Run1(Parser):
             tuple_line["qualification_score"] =  re.split(self.separator2,tokens[6])[1]
             tuple_line["testDuration"] = (re.split(self.separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):
-            tuple_line["worker_id"] = worker_id
             tuple_line["event"] = event
+            tuple_line["worker_id"] = worker_id
             tcount = 3
             results = self.extract_feedback(tokens,3,"Gender=",self.separator2)
             tuple_line["feedback"] = self.quote + results[0].replace("\"","\'")  + self.quote
@@ -283,7 +307,32 @@ class Parser_Run1(Parser):
             tuple_line["country"] = self.quote + re.split(self.separator2,tokens[tcount])[1] + self.quote  
             tcount += 1
             tuple_line["age"] = re.split(self.separator2,tokens[tcount])[1]
-        return (tuple_line)      
+        return (tuple_line)     
+    
+    def initialize_empty_fields(self):
+        '''
+        Initialize consent log empty fields to guarantee that columns are aligned,
+         even when there is missing data
+        '''
+        tuple_line={"time_stamp": "",
+                    "event":"",     
+                    "worker_id":"",
+                    "consent_date":"",
+                    "test1":"",
+                    "test2":"",
+                    "test3":"",
+                    "test4":"",
+                    "qualification_score":"",
+                    "testDuration":"",
+                    "feedback":"",
+                    "gender":"",
+                    "years_programming":"",
+                    "difficulty":"",
+                    "country":"",
+                    "age":""
+        }
+        return(tuple_line)
+ 
     
     def extract_feedback(self,tokens,index,endToken,separator):
         """extracts the feedback text and returns next token position """

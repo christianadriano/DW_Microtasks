@@ -283,8 +283,8 @@ class Parser_Run1(Parser):
             tuple_line["worker_id"] = worker_id
             tuple_line["consent_date"] = (re.split(self.separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
-            tuple_line["worker_id"] = worker_id
             tuple_line["event"] = event
+            tuple_line["worker_id"] = worker_id
             tuple_line["test1"] = re.split(self.separator2,tokens[2])[1]
             tuple_line["test2"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["test3"] = re.split(self.separator2,tokens[4])[1]

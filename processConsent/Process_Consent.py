@@ -30,11 +30,6 @@ class Process_Consent:
         #Load file into a dictionary 
         consent_dictionary = self.load_consent_file(consent_file_name_path, parser)
         consent_tuples = list(consent_dictionary.values())
-        
-        #duplicate_map = self.count_duplicates(consent_dictionary)
-        #consent_dictionary = self.remove_duplicates(consent_dictionary,duplicate_map)
-        #consent_dictionary = self.compute_answer_index(consent_dictionary)
-        #print file_lines to file
         return (consent_tuples)
     
     @staticmethod
@@ -73,8 +68,7 @@ class Process_Consent:
 #                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
                     consent_dictionary[key] = self.merge_dictionaries(parsed_line,existing_dictionary)
                 else:
-                   consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 
-                #print(parsed_line)
+                    consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 
         return(consent_dictionary)
 
     def load_file(self,file_path):
@@ -83,7 +77,6 @@ class Process_Consent:
         with open(file_path) as file_object:
             for line in file_object:
                 file_lines.append(line) 
-                #print(file_lines)
         file_object.close()
         return file_lines
     
@@ -131,59 +124,7 @@ class Process_Consent:
         return(dict_final)
             
 
-    def count_duplicates(self,tuples):
-        '''
-        The rule used is worker_id + session_id + microtask_id
-        '''
-        count_map = {"0:0:0":1} 
-        duplicate_map = {"0:0:0":2}
-        for line in tuples:
-            worker_id = line["worker_id"]
-            if(self.experiment==2):
-                session_id = line["session_id"]
-                microtask_id = line["microtask_id"]
-            
-            counter = 1
-            key = microtask_id+"_"+session_id +"_"+ worker_id
-            if(key in count_map.keys()):
-                counter = count_map[key]+1
-                count_map[key] = counter
-                if(counter>1):
-                    duplicate_map[key] = counter
-            else:
-                count_map[key] = counter
-
-            
-        #print("Duplicated items:")
-        #print(duplicate_map.keys())
-        #print(duplicate_map) 
-        return(duplicate_map)   
-    
-    def remove_duplicates(self,tuples, duplicate_tuples):
-        
-        final_tuples = []
-        duplicate_keys = duplicate_tuples.keys()
-        for line in tuples:
-            worker_id = line["worker_id"]
-            if(self.experiment_id==2):
-                session_id = line["session_id"]
-                microtask_id = line["microtask_id"]
-            
-            key = microtask_id+"_"+session_id +"_"+ worker_id
-            if(key in duplicate_keys):
-                duplicate_counter = duplicate_tuples[key]
-                duplicate_counter = duplicate_counter-1
-                duplicate_tuples[key] = duplicate_counter
-                ''' Appends only the last occurrence of the duplicates'''
-                if(duplicate_counter==0): 
-                    final_tuples.append(line)
-                    duplicate_tuples.pop(key)
-            else:
-                ''' Appends any line that is not contained in the duplicate_keys'''
-                final_tuples.append(line)
-         
-        return(final_tuples)
-  
+   
   
 class Process_Consent_1(Process_Consent):
 
@@ -351,5 +292,5 @@ class Process_Consent_2(Process_Consent):
 process_consent = Process_Consent()
 processor_1 = process_consent.process_factory(experiment_id="1")
 processor_1.process()
-#processor_2 = process_consent.process_factory(experiment_id="2")
-#processor_2.process()
+processor_2 = process_consent.process_factory(experiment_id="2")
+processor_2.process()

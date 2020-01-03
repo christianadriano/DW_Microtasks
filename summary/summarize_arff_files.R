@@ -3,9 +3,9 @@
 install.packages("farff")
 library(farff)
 
-setwd("C://Users//Chris//Documents//GitHub//DW_Microtasks//output//");
-experiment1_fileName = "consolidated_Final_Experiment_1.arff";
-experiment2_fileName = "consolidated_Final_Experiment_2.arff"
+path <- "C://Users//Christian//Documents//GitHub//DW_Microtasks//output//";
+experiment1_fileName = paste(path,"consolidated_Final_Experiment_1.arff", sep="");
+experiment2_fileName = paste(path,"consolidated_Final_Experiment_2.arff");
 
 experiment1_csv = "consolidated_Final_Experiment_1_csv.csv"
 

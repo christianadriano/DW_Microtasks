@@ -26,7 +26,16 @@ class Parser:
     
     def parse_session_line_to_dictionary(self,line):
         pass
-     
+    
+    @staticmethod
+    def convert_to_numeric(self,boolean_word):
+        '''
+        Converts true to 1 and false to 0
+        '''
+        if(boolean_word =="true"): return(1)
+        else: return(0)
+        
+        
     @staticmethod
     def factory_method(self,worker_id_suffix,separator1,separator2):
         if(worker_id_suffix =="1"):
@@ -188,10 +197,10 @@ class Parser_Run2(Parser):
         elif(event=="SKILLTEST"):
             tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
             tuple_line["worker_id"]= worker_id #need this to find index the tuple    
-            tuple_line["test1"] = tokens[5].strip()
-            tuple_line["test2"] = tokens[7].strip()
-            tuple_line["test3"] = tokens[9].strip()
-            tuple_line["test4"] = tokens[11].strip()
+            tuple_line["test1"] = Parser.convert_to_numeric(self,tokens[5].strip())
+            tuple_line["test2"] = Parser.convert_to_numeric(self,tokens[7].strip())
+            tuple_line["test3"] = Parser.convert_to_numeric(self,tokens[9].strip())
+            tuple_line["test4"] = Parser.convert_to_numeric(self,tokens[11].strip())
             tuple_line["qualification_score"] = tokens[13].strip()
             tuple_line["testDuration"] = tokens[15].strip()
         elif(event=="SURVEY"):
@@ -227,6 +236,7 @@ class Parser_Run2(Parser):
             tuple_line["explanation"] = self.quote + line[index:].replace(",",";").replace("\"","\'") + self.quote          
         return (tuple_line)
         
+    
     def initialize_empty_fields(self):
         '''
         Initialize consent log empty fields to guarantee that columns are aligned,
@@ -285,10 +295,10 @@ class Parser_Run1(Parser):
         elif(event=="SKILLTEST"):
             tuple_line["event"] = event
             tuple_line["worker_id"] = worker_id
-            tuple_line["test1"] = re.split(self.separator2,tokens[2])[1]
-            tuple_line["test2"] = re.split(self.separator2,tokens[3])[1]
-            tuple_line["test3"] = re.split(self.separator2,tokens[4])[1]
-            tuple_line["test4"] = re.split(self.separator2,tokens[5])[1]
+            tuple_line["test1"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[2])[1])
+            tuple_line["test2"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[3])[1])
+            tuple_line["test3"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[4])[1])
+            tuple_line["test4"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[5])[1])
             tuple_line["qualification_score"] =  re.split(self.separator2,tokens[6])[1]
             tuple_line["testDuration"] = (re.split(self.separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):

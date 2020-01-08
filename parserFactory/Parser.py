@@ -97,11 +97,11 @@ class Parser_Run3(Parser):
             tuple_line["country"] = self.quote + tokens[17] + self.quote 
             tuple_line["age"] = tokens[19]
         elif(event=="SKILLTEST"):
-            tuple_line["test1"] = tokens[7].strip()
-            tuple_line["test2"] = tokens[9].strip()
-            tuple_line["test3"] = tokens[11].strip()
-            tuple_line["test4"] = tokens[13].strip()
-            tuple_line["test5"] = tokens[15].strip()
+            tuple_line["test1"] = Parser.convert_to_numeric(self,tokens[7].strip())
+            tuple_line["test2"] = Parser.convert_to_numeric(self,tokens[9].strip())
+            tuple_line["test3"] = Parser.convert_to_numeric(self,tokens[11].strip())
+            tuple_line["test4"] = Parser.convert_to_numeric(self,tokens[13].strip())
+            tuple_line["test5"] = Parser.convert_to_numeric(self,tokens[15].strip())
             tuple_line["qualification_score"] = tokens[17].strip()
             tuple_line["testDuration"] = tokens[19].strip()
         elif(event=="FEEDBACK"):

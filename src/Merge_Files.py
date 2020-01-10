@@ -415,5 +415,5 @@ class Merger_1(Merge_Files):
 merger = Merge_Files()
 parser = merger.merger_factory(experiment="1")
 parser.process()
-parser = merger.merger_factory(experiment="2")
-parser.process()
+#parser = merger.merger_factory(experiment="2")
+#parser.process()

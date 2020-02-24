@@ -36,3 +36,11 @@ class FileReaderWriter(object):
         str_accum = str_accum[1:str_accum.__len__()] #remove first item
         return str_accum
     
+    def write_lines_to_file(self,tuple_lines,output_file_path):
+        with open(output_file_path, 'a') as the_file:
+            """Write header"""
+            for line in tuple_lines:     
+                the_file.write(line['content'])
+                the_file.write("\n")
+    
+    

@@ -187,16 +187,16 @@ class Parser_Run2(Parser):
         tuple_line = self.initialize_empty_fields()
         worker_id = tokens[3].strip()+"_"+self.suffix
         event = tokens[1].strip()
+        '''Capture TimeStamp'''
+        time_stamp_event = tokens[0]
+        time_stamp = time_stamp_event[:12] 
+        tuple_line["time_stamp"] = time_stamp
+        tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
+        tuple_line["worker_id"]= worker_id #need this to find index the tuple    
+
         if(event=="CONSENT"):
-            time_stamp_event = tokens[0]
-            time_stamp = time_stamp_event[:12] 
-            tuple_line["time_stamp"] = time_stamp
-            tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"]= worker_id #need this to find index the tuple    
             tuple_line["consent_date"] = tokens[5].strip()
         elif(event=="SKILLTEST"):
-            tuple_line["event"] = event#note that this will be overwritten when merging with MICROTASK event      
-            tuple_line["worker_id"]= worker_id #need this to find index the tuple    
             tuple_line["test1"] = Parser.convert_to_numeric(self,tokens[5].strip())
             tuple_line["test2"] = Parser.convert_to_numeric(self,tokens[7].strip())
             tuple_line["test3"] = Parser.convert_to_numeric(self,tokens[9].strip())
@@ -204,8 +204,6 @@ class Parser_Run2(Parser):
             tuple_line["qualification_score"] = tokens[13].strip()
             tuple_line["testDuration"] = tokens[15].strip()
         elif(event=="SURVEY"):
-            tuple_line["event"] = event    
-            tuple_line["worker_id"]= worker_id #need this to find index the tuple
             tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
             tuple_line["gender"] = tokens[9].replace(" ", "_")
             tuple_line["years_programming"] = tokens[11]
@@ -217,7 +215,7 @@ class Parser_Run2(Parser):
     
     def parse_session_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
-        tuple_line = []
+        tuple_line = {}
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
         time_stamp = time_stamp_event[:12]
@@ -285,16 +283,17 @@ class Parser_Run1(Parser):
         tuple_line = self.initialize_empty_fields()
         worker_id = re.split(self.separator2,tokens[1])[1].strip()+"_"+self.suffix
         event = tokens[0].rsplit(self.separator2)[1].strip()
-        if(event=="CONSENT"):
-            time_stamp_event = tokens[0]
-            time_stamp = time_stamp_event[:12]
-            tuple_line["time_stamp"] = time_stamp
-            tuple_line["event"] = event
-            tuple_line["worker_id"] = worker_id
+        
+        '''Capture TimeStamp'''
+        time_stamp_event = tokens[0]
+        time_stamp = time_stamp_event[:12]
+        tuple_line["time_stamp"] = time_stamp
+        tuple_line["event"] = event
+        tuple_line["worker_id"] = worker_id
+
+        if(event=="CONSENT"):   
             tuple_line["consent_date"] = (re.split(self.separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
-            tuple_line["event"] = event
-            tuple_line["worker_id"] = worker_id
             tuple_line["test1"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[2])[1])
             tuple_line["test2"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[3])[1])
             tuple_line["test3"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[4])[1])
@@ -302,8 +301,6 @@ class Parser_Run1(Parser):
             tuple_line["qualification_score"] =  re.split(self.separator2,tokens[6])[1]
             tuple_line["testDuration"] = (re.split(self.separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):
-            tuple_line["event"] = event
-            tuple_line["worker_id"] = worker_id
             tcount = 3
             results = self.extract_feedback(tokens,3,"Gender=",self.separator2)
             tuple_line["feedback"] = self.quote + results[0].replace("\"","\'")  + self.quote
@@ -356,15 +353,18 @@ class Parser_Run1(Parser):
     
     def parse_session_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
-        tuple_line = []
+        tuple_line = {}
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12]
         event = re.split(self.separator2,tokens[0])[1]
+        time_stamp = time_stamp_event[:12]
         if(event=="MICROTASK"):#Ignore other events
+            tuple_line["time_stamp"] = time_stamp
+            tuple_line["event"] = event
             worker_id = re.split(self.separator2,tokens[1])[1]+"_"+self.suffix
             session_id = re.split(self.separator2,tokens[2])[1]
-            tuple_line={"time_stamp":time_stamp,"event":event,"worker_id":worker_id,"session_id":session_id}  
+            tuple_line["worker_id"] = worker_id
+            tuple_line["session_id"] = session_id
             tuple_line["microtask_id"] = re.split(self.separator2,tokens[3])[1]
             tuple_line["file_name"] = re.split(self.separator2,tokens[4])[1].strip()
             tuple_line["question"] = self.quote + re.split(self.separator2,tokens[5])[1].replace(",",";").replace("\"","\'") + self.quote

@@ -296,25 +296,33 @@ class Merger_1(Merge_Files):
         self.testInput ='C://Users//Christian//Documents//GitHub//DW_Microtasks//test//'
         
     def process(self):
-        """process the two files"""
+        """process the two files"""        
         
+        '''Add Year Month Day to files. Started on 24 Oct 2014'''
+        self.append_year_month_day(";", self.root, "session_Run1-Total-25oct.log", 24)
+        self.append_year_month_day(";", self.root, "consent_Run1-Total-25oct.log", 24)
+        
+        self.append_year_month_day("%", self.root, "session_Run2-28oct.log", 25)
+        self.append_year_month_day("%", self.root, "consent_Run2-28oct.log", 25)
+
+
         tuple_lines_1 = self.run(
-                               self.root + "session_Run1-Total-25oct.log",
-                               self.root + "consent_Run1-Total-25oct.log",
+                               self.output + "t-stamp_session_Run1-Total-25oct.log",
+                               self.output + "t-stamp_consent_Run1-Total-25oct.log",
                                #self.testInput + "sessionTestData.txt",
                                #self.testInput + "consentTestData.txt",
                                 Parser.Parser.factory_method(self,worker_id_suffix='1', separator1=";", separator2="=")
                                ) 
         
         tuple_lines_2 = self.run(
-                                 self.root + "session_Run2-28oct.log",
-                                 self.root + "consent_Run2-28oct.log",
+                                 self.output + "t-stamp_session_Run2-28oct.log",
+                                 self.output + "t-stamp_consent_Run2-28oct.log",
                                  Parser.Parser.factory_method(self,worker_id_suffix='2',separator1="%",separator2="%")
                                ) 
         
         tuple_lines = tuple_lines_1 + tuple_lines_2
         
-        tuple_lines = self.add_year_month_day(tuple_lines)
+        #tuple_lines = self.add_year_month_day(tuple_lines)
         
 #         #Test files
 #         tuple_lines = self.run("C://Users//Chris//Documents//GitHub//DW_Microtasks//test//sessionTestData_2.txt",
@@ -374,41 +382,80 @@ class Merger_1(Merge_Files):
                     ]
         return header_lines   
     
-    def add_year_month_day(self,tuple_lines):
+    
+    def append_year_month_day(self, separator1, file_path, file_name, start_day):
+    
+        file_lines = self.load_file(file_path+file_name)
+        file_lines = self.consolidate_broken_lines(file_lines)
+        line_list=[]
+        i=0
+        for line in file_lines:
+            tokens = re.split(separator1,line)    
+            tuple_line = {"time_stamp":0,"content":0}
+            
+            '''Capture TimeStamp'''
+            time_stamp_event = tokens[0]
+            time_stamp = time_stamp_event[:12] 
+            tuple_line["time_stamp"] = time_stamp            
+            tuple_line["content"] = line
+            line_list.append(tuple_line)
+        
+        '''append the Year, Month, Day'''
+        last_day = self.add_year_month_day(line_list, file_name, start_day)
+        
+        return(last_day)
+        
+        
+    def add_year_month_day(self,tuple_lines,file_name,start_day):
         '''
         add the information about the year, month, and day of the experiment
         to the time_stamp field
         '''
+
         first_dt = parse(tuple_lines[0]['time_stamp'])
-        current_day = 24 #experiment started on October 24, 2014
+        current_day = start_day #experiment started on October 24, 2014
         hour = first_dt.hour 
         minute = first_dt.minute
         second = first_dt.second
         microsecond = first_dt.microsecond
-        dt_previous = parse("2014 10 24 "+str(hour)+":"+str(minute)+
+        dt_previous = parse(str("2014")+" "+str("10")+" "+str(start_day)+" "+
+                            str(hour)+":"+str(minute)+
                             ":"+str(second)+"."+str(microsecond))
         
         length = len(tuple_lines)
         tuple_lines[0]['time_stamp'] = "\"" +dt_previous.strftime("%Y %m %d %H:%M:%S.%f") +"\""
-                        
+        tuple_lines[0]['content'] = str("2014")+" "+str("10")+" "+str(start_day) +" "+ tuple_lines[0]['content']
+
+        #dt_current = dt_previous
         for i in range(1,length):
-            dt = parse(tuple_lines[i]['time_stamp'])
-            hour = dt.hour
-            minute = dt.minute
-            second = dt.second
-            microsecond = dt.microsecond
+            dt_current = parse(tuple_lines[i]['time_stamp'])
+            hour = dt_current.hour
+            minute = dt_current.minute
+            second = dt_current.second
+            microsecond = dt_current.microsecond
             #check if crossed the day (e.g., current hour smaller than previous hour)
-            if(dt.hour<dt_previous.hour):
+            if(dt_current.hour < dt_previous.hour):
                 current_day +=1
+                #print(dt_current.hour)
+                #print(dt_previous.hour)
                 #dt_previous += datetime.timedelta(days=1)
-            dt = parse("2014 10 "+str(current_day)+" "+str(hour)+":"+str(minute)+
-                            ":"+str(second)+"."+str(microsecond))
+            
+            dt_current = parse(str("2014")+" "+str("10")+" "+str(current_day)+" "
+                       +str(hour)+":"+str(minute)+
+                        ":"+str(second)+"."+str(microsecond))
         
-            dt_previous = dt #reset previous date
+            dt_previous = dt_current #reset previous date
             tuple_lines[i]['time_stamp'] = "\"" +dt_previous.strftime("%Y %m %d %H:%M:%S.%f") +"\""
+            content = tuple_lines[i]['content']
+            tuple_lines[i]['content'] = str("2014")+" "+str("10")+" "+str(current_day) +" " +content
 
+                
+        '''write to file'''
+        output_file_path = self.output+"t-stamp_"+file_name
+        writer = FileReaderWriter()
+        writer.write_lines_to_file(tuple_lines,output_file_path)
 
-        return (tuple_lines)
+        return (current_day)
     
 #CONTROLLER CODE
 

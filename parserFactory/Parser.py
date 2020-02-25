@@ -103,7 +103,7 @@ class Parser_Run3(Parser):
             tuple_line["test4"] = Parser.convert_to_numeric(self,tokens[13].strip())
             tuple_line["test5"] = Parser.convert_to_numeric(self,tokens[15].strip())
             tuple_line["qualification_score"] = tokens[17].strip()
-            tuple_line["testDuration"] = tokens[19].strip()
+            tuple_line["test_duration"] = tokens[19].strip()
         elif(event=="FEEDBACK"):
             tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
         elif(event=="QUIT"):
@@ -135,14 +135,14 @@ class Parser_Run3(Parser):
         tuple_line["test4"] = ""
         tuple_line["test5"] = ""
         tuple_line["qualification_score"] = ""
-        tuple_line["testDuration"] = ""
+        tuple_line["test_duration"] = ""
         tuple_line["feedback"] = ""
         tuple_line["quit_reason"] = ""
         return(tuple_line)
     
     def parse_session_line_to_dictionary(self,line):
         """parse the line into a dictionary"""
-        tuple_line = []
+        tuple_line = {}
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
         time_stamp = self.quote + time_stamp_event[:28] + self.quote
@@ -202,8 +202,9 @@ class Parser_Run2(Parser):
             tuple_line["test3"] = Parser.convert_to_numeric(self,tokens[9].strip())
             tuple_line["test4"] = Parser.convert_to_numeric(self,tokens[11].strip())
             tuple_line["qualification_score"] = tokens[13].strip()
-            tuple_line["testDuration"] = tokens[15].strip()
+            tuple_line["test_duration"] = tokens[15].strip()
         elif(event=="SURVEY"):
+            #Do not need the event here, otherwise it will overwrite the Microtask event.
             tuple_line["feedback"] = self.quote + tokens[7].replace(",",";").replace("\"","\'")  + self.quote
             tuple_line["gender"] = tokens[9].replace(" ", "_")
             tuple_line["years_programming"] = tokens[11]
@@ -249,7 +250,7 @@ class Parser_Run2(Parser):
                     "test3":"",
                     "test4":"",
                     "qualification_score":"",
-                    "testDuration":"",
+                    "test_duration":"",
                     "feedback":"",
                     "gender":"",
                     "years_programming":"",
@@ -290,7 +291,7 @@ class Parser_Run1(Parser):
         tuple_line["time_stamp"] = time_stamp
         tuple_line["event"] = event
         tuple_line["worker_id"] = worker_id
-
+ 
         if(event=="CONSENT"):   
             tuple_line["consent_date"] = (re.split(self.separator2,tokens[2])[1]).strip()
         elif(event=="SKILLTEST"):
@@ -299,7 +300,7 @@ class Parser_Run1(Parser):
             tuple_line["test3"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[4])[1])
             tuple_line["test4"] = Parser.convert_to_numeric(self,re.split(self.separator2,tokens[5])[1])
             tuple_line["qualification_score"] =  re.split(self.separator2,tokens[6])[1]
-            tuple_line["testDuration"] = (re.split(self.separator2,tokens[7])[1]).strip()
+            tuple_line["test_duration"] = (re.split(self.separator2,tokens[7])[1]).strip()
         elif(event=="SURVEY"):
             tcount = 3
             results = self.extract_feedback(tokens,3,"Gender=",self.separator2)
@@ -330,7 +331,7 @@ class Parser_Run1(Parser):
                     "test3":"",
                     "test4":"",
                     "qualification_score":"",
-                    "testDuration":"",
+                    "test_duration":"",
                     "feedback":"",
                     "gender":"",
                     "years_programming":"",

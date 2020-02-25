@@ -175,6 +175,7 @@ class Merge_Files:
                 worker_id = newLine["worker_id"]
                 if(worker_id in worker_data):
                     worker_data_dictionary = worker_data[worker_id]
+                    worker_data_dictionary['event'] = newLine['event'] #guarantee to use event from new line
                     newLine.update(worker_data_dictionary) ##append worker data to the session data
                 parsed_lines.append(newLine)
         return parsed_lines
@@ -342,12 +343,12 @@ class Merger_1(Merge_Files):
     
     def get_header_arff(self):
         author ="Christian Medeiros Adriano"
-        date="October, 28, 2014"
+        date="October, 29, 2014"
         header_lines=["% 1. Title: Microtasks from Experiment One",
                     "%" ,
                     "% 2. Sources:",
                     "%      (a) Creator: Christian Medeiros Adriano",
-                    "%      (b) Date of Experiment: October 20, 2014",
+                    "%      (b) Date of Experiment: from October 24 to 29, 2014 ",
                     "%      (c) Paper draft = https://arxiv.org/abs/1612.03015",
                     "%" ,
                     "@RELATION Task",

@@ -80,7 +80,7 @@ class Parser_Run3(Parser):
         
         tuple_line = self.initialize_empty_fields() #guarantees that fields are aligned, regardless of missing ones.
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12] 
+        time_stamp = time_stamp_event[:28] 
         tuple_line["time_stamp"] = time_stamp
         tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
         tuple_line["worker_id"] = tokens[3]+"_"+self.suffix #need this to find index the tuple

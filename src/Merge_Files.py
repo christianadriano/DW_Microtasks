@@ -461,7 +461,7 @@ class Merger_1(Merge_Files):
 #CONTROLLER CODE
 
 merger = Merge_Files()
-parser = merger.merger_factory(experiment="1")
-parser.process()
-#parser = merger.merger_factory(experiment="2")
+#parser = merger.merger_factory(experiment="1")
 #parser.process()
+parser = merger.merger_factory(experiment="2")
+parser.process()

@@ -189,7 +189,7 @@ class Parser_Run2(Parser):
         event = tokens[1].strip()
         '''Capture TimeStamp'''
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12] 
+        time_stamp = time_stamp_event[:23] 
         tuple_line["time_stamp"] = time_stamp
         tuple_line["event"] = event #note that this will be overwritten when merging with MICROTASK event      
         tuple_line["worker_id"]= worker_id #need this to find index the tuple    
@@ -218,7 +218,7 @@ class Parser_Run2(Parser):
         tuple_line = {}
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12]
+        time_stamp = time_stamp_event[:23]
         event = tokens[1]
         if(event=="MICROTASK"):#Ignore other events
             worker_id = tokens[3]+"_"+self.suffix
@@ -286,7 +286,7 @@ class Parser_Run1(Parser):
         
         '''Capture TimeStamp'''
         time_stamp_event = tokens[0]
-        time_stamp = time_stamp_event[:12]
+        time_stamp = time_stamp_event[:23]
         tuple_line["time_stamp"] = time_stamp
         tuple_line["event"] = event
         tuple_line["worker_id"] = worker_id
@@ -357,7 +357,7 @@ class Parser_Run1(Parser):
         tokens = re.split(self.separator1,line)    
         time_stamp_event = tokens[0]
         event = re.split(self.separator2,tokens[0])[1]
-        time_stamp = time_stamp_event[:12]
+        time_stamp = time_stamp_event[:23]
         if(event=="MICROTASK"):#Ignore other events
             tuple_line["time_stamp"] = time_stamp
             tuple_line["event"] = event

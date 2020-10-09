@@ -10,8 +10,14 @@ Provide appropriate ARFF headers for both files.
 @author: Christian
 '''
 import re
-from util.FileReaderWriter import FileReaderWriter
-from util.Date_Stamp_1 import Date_Stamp_1
+import sys
+PROJECT_DIR_NAME = "C:/Users/Christian/Documents/GitHub/DW_Microtasks/"
+#sys.path.insert(0, PROJECT_DIR_NAME+"/src/") # location of src 
+sys.path.insert(0, PROJECT_DIR_NAME) # location of project root.
+
+
+from src.util.FileReaderWriter import FileReaderWriter
+from src.util import Date_Stamp_1
 from parserFactory import Parser
 
 class Process_Consent:
@@ -66,6 +72,7 @@ class Process_Consent:
                 if(key in consent_dictionary.keys() and event!="CONSENT"):
                     existing_dictionary = consent_dictionary[key]  
 #                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
+                    #TODO change the event to COMPLETE so we do not overwrite SKillTest data
                     consent_dictionary[key] = self.merge_dictionaries(parsed_line,existing_dictionary)
                 else:
                     consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 
@@ -290,7 +297,7 @@ class Process_Consent_2(Process_Consent):
 #CONTROLLER CODE
 
 process_consent = Process_Consent()
-processor_1 = process_consent.process_factory(experiment_id="1")
-processor_1.process()
+#processor_1 = process_consent.process_factory(experiment_id="1")
+#processor_1.process()
 processor_2 = process_consent.process_factory(experiment_id="2")
 processor_2.process()

@@ -9,7 +9,13 @@ Processes SessionLog and ConsentLog Files for SECOND Run Experiment 1
 '''
 #from idlelib.browser import file_open
 import re
-from util.FileReaderWriter import FileReaderWriter  
+import sys
+PROJECT_DIR_NAME = "C:/Users/Christian/Documents/GitHub/DW_Microtasks/"
+#sys.path.insert(0, PROJECT_DIR_NAME+"/src/") # location of src 
+sys.path.insert(0, PROJECT_DIR_NAME) # location of project root.
+
+
+from src.util.FileReaderWriter import FileReaderWriter
 from parserFactory import Parser
 from dateutil.parser import parse
 

@@ -69,13 +69,14 @@ class Process_Consent:
                 else:
                     key = worker_id
                     
-                if(key in consent_dictionary.keys() and event!="CONSENT"):
+                if(key in consent_dictionary.keys()):# or event!="CONSENT"):
                     existing_dictionary = consent_dictionary[key]  
 #                    existing_dictionary.update(parsed_line) ##append new data from SkillTest or Survey event
                     #TODO change the event to COMPLETE so we do not overwrite SKillTest data
                     consent_dictionary[key] = self.merge_dictionaries(parsed_line,existing_dictionary)
                 else:
-                    consent_dictionary[key]=parsed_line # print("Ignored: ", parsed_line) 
+                    consent_dictionary[key]=parsed_line
+                    #print("Ignored: ", parsed_line) 
         return(consent_dictionary)
 
     def load_file(self,file_path):

@@ -264,7 +264,7 @@ class Merger_2(Merge_Files):
                     "@ATTRIBUTE explanation STRING",
                     "@ATTRIBUTE consent_date NUMERIC",
                     "@ATTRIBUTE language STRING",
-                    "@ATTRIBUTE experience String",
+                    "@ATTRIBUTE profession String",
                     "@ATTRIBUTE gender {Female,Male,Prefer_not_to_tell,Other}",
                     "@ATTRIBUTE learned STRING",
                     "@ATTRIBUTE years_programming NUMERIC",

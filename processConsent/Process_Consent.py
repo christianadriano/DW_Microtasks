@@ -268,7 +268,7 @@ class Process_Consent_2(Process_Consent):
                     "@ATTRIBUTE file_name STRING",
                     "@ATTRIBUTE consent_date NUMERIC",
                     "@ATTRIBUTE language STRING",
-                    "@ATTRIBUTE experience String",
+                    "@ATTRIBUTE profession String",
                     "@ATTRIBUTE gender {Female,Male,Prefer_not_to_tell,Other}",
                     "@ATTRIBUTE learned STRING",
                     "@ATTRIBUTE years_programming NUMERIC",
@@ -289,7 +289,7 @@ class Process_Consent_2(Process_Consent):
                     ]
         return header_lines     
 
-#experience {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other}"
+#profession {Hobbyist, Professional_Developer, Graduate_Student,Undergraduate_Student, Other}"
 #quit_reason {TOO_DIFFICULT, TOO_LONG, TOO_BORING, OTHER}"
 
 #-------------------------------------------------------------------   
